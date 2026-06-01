@@ -11,6 +11,7 @@ fcg-identity
 fcg-campaigns
 fcg-donations
 fcg-donation-worker
+fcg-audit-logs
 fcg-solidarity-web
 ```
 
@@ -35,6 +36,7 @@ Responsabilidades:
 - ConfigMaps e Secrets de referencia sem valores sensiveis reais
 - configuracao de Keycloak para realm, clients e roles
 - configuracao de Kafka e Kafka UI
+- configuracao de MongoDB para auditoria centralizada
 - configuracao de Prometheus e dashboards do Grafana
 - Terraform para provisionar recursos na Azure
 - Azure API Management como borda publica das APIs
@@ -103,6 +105,7 @@ fcg-solidarity-infra/
     observability/
   keycloak/
   kafka/
+  mongodb/
   grafana/
     dashboards/
   terraform/
@@ -124,3 +127,4 @@ fcg-solidarity-infra/
 - Endpoints `/internal/*` nao devem ser publicados no APIM.
 - Credenciais e segredos nao devem ser versionados.
 - Recursos Azure devem ser provisionados por IaC e parametrizados por ambiente.
+- O `fcg-audit-logs` consome o topico `audit-log-requested` e persiste auditoria em MongoDB.

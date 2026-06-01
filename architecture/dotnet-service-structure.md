@@ -56,12 +56,30 @@ tests/
   FCG.DonationWorker.CommonTestsUtilities/
 ```
 
+## Worker com MongoDB
+
+Exemplo para `fcg-audit-logs`:
+
+```text
+src/
+  FCG.AuditLogs.Domain/
+  FCG.AuditLogs.Application/
+  FCG.AuditLogs.Infrastructure.Kafka/
+  FCG.AuditLogs.Infrastructure.MongoDB/
+  FCG.AuditLogs.Worker/
+tests/
+  FCG.AuditLogs.UnitTests/
+  FCG.AuditLogs.IntegratedTests/
+  FCG.AuditLogs.CommonTestsUtilities/
+```
+
 ## Convenções
 
 - Codigo, namespaces, DTOs, eventos e topicos tecnicos ficam em ingles.
 - Documentacao de dominio continua em pt-BR.
 - Cada repositorio tem solution propria.
 - Cada servico mantem migrations proprias.
+- Servicos com MongoDB nao usam migrations EF Core; devem declarar indices e bootstrap da colecao na infraestrutura.
 - APIs mantem testes unitarios, integrados e funcionais quando aplicavel.
 - Testes integrados das APIs tambem cobrem endpoints.
 - Worker mantem testes unitarios e integrados, sem projeto de testes funcionais.

@@ -255,6 +255,44 @@ Acesso:
 Operacional, fora do APIM
 ```
 
+## fcg-audit-logs
+
+O `fcg-audit-logs` nao possui endpoints de negocio. Ele consome eventos de auditoria do Kafka e persiste os registros em MongoDB.
+
+Entradas de negocio:
+
+```text
+Kafka topic audit-log-requested
+Event AuditLogRequestedEvent
+```
+
+Saidas de negocio:
+
+```text
+MongoDB database AuditLogsDb
+Collection audit_logs
+```
+
+### GET /health
+
+Endpoint operacional de saude.
+
+Acesso:
+
+```text
+Operacional, fora do APIM
+```
+
+### GET /metrics
+
+Endpoint operacional de metricas Prometheus/OpenTelemetry.
+
+Acesso:
+
+```text
+Operacional, fora do APIM
+```
+
 ## fcg-donations
 
 Base path:

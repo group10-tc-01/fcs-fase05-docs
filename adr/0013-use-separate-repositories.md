@@ -1,6 +1,6 @@
 # Usar repositorios separados por aplicacao
 
-Cada aplicacao da fase 5 tera seu proprio repositorio: `fcg-identity`, `fcg-campaigns`, `fcg-donations`, `fcg-donation-worker` e `fcg-solidarity-web`. Alem deles, havera o repositorio `fcg-solidarity-infra` para infraestrutura compartilhada, ambiente integrado e provisionamento em Azure.
+Cada aplicacao da fase 5 tera seu proprio repositorio: `fcg-identity`, `fcg-campaigns`, `fcg-donations`, `fcg-donation-worker`, `fcg-audit-logs` e `fcg-solidarity-web`. Alem deles, havera o repositorio `fcg-solidarity-infra` para infraestrutura compartilhada, ambiente integrado e provisionamento em Azure.
 
 **Opcoes consideradas**
 

@@ -22,6 +22,7 @@ fcg-identity
 fcg-campaigns
 fcg-donations
 fcg-donation-worker
+fcg-audit-logs
 fcg-solidarity-web
 fcg-solidarity-infra
 ```
@@ -32,6 +33,7 @@ Responsabilidades:
 - `fcg-campaigns`: administracao de campanhas, painel de transparencia e atualizacao idempotente do valor arrecadado.
 - `fcg-donations`: recebimento de intencoes de doacao e publicacao de eventos no Kafka.
 - `fcg-donation-worker`: consumo de eventos de doacao, processamento, atualizacao de status da doacao e notificacao da `fcg-campaigns`.
+- `fcg-audit-logs`: consumo de eventos de auditoria do Kafka e persistencia em MongoDB.
 - `fcg-solidarity-web`: interface web da plataforma.
 - `fcg-solidarity-infra`: infraestrutura compartilhada, ambiente integrado, Kubernetes, observabilidade e Terraform Azure.
 
@@ -46,6 +48,7 @@ fcg-identity
 fcg-campaigns
 fcg-donations
 fcg-donation-worker
+fcg-audit-logs
 fcg-solidarity-web
 fcg-solidarity-infra
 ```
@@ -62,7 +65,7 @@ O `fcg-solidarity-infra` deve conter:
 
 - docker compose integrado
 - manifests Kubernetes integrados
-- configuracoes de Keycloak, Kafka, Kafka UI, Prometheus e Grafana
+- configuracoes de Keycloak, Kafka, Kafka UI, MongoDB, Prometheus e Grafana
 - dashboards do Grafana
 - Terraform para Azure
 - README do ambiente completo
@@ -171,12 +174,40 @@ O worker nao escreve diretamente no banco da `fcg-campaigns`.
 
 Referencia: [ADR 0009](../adr/0009-worker-updates-donation-status.md), [ADR 0010](../adr/0010-worker-updates-campaigns-through-internal-api.md).
 
+## Auditoria
+
+A auditoria e explicita por eventos de negocio e seguranca. Cada aplicacao decide quais eventos auditar dentro dos seus casos de uso e publica uma mensagem no Kafka.
+
+Topic Kafka:
+
+```text
+audit-log-requested
+```
+
+Evento:
+
+```text
+AuditLogRequestedEvent
+```
+
+O `fcg-audit-logs` consome o topico `audit-log-requested`, aplica idempotencia por `eventId` e persiste os registros em MongoDB. Os servicos de negocio nao possuem tabela `AuditLogs` nos seus databases SQL.
+
+Este fluxo de auditoria nao usa outbox. Falhas de publicacao devem ser observadas com logs tecnicos e metricas, mas nao bloqueiam a decisao de manter auditoria fora do banco operacional dos servicos.
+
+Referencia: [ADR 0030](../adr/0030-use-explicit-business-audit-logs.md).
+
 ## Bancos de Dados
 
 Banco escolhido:
 
 ```text
 SQL Server
+```
+
+Banco de auditoria:
+
+```text
+MongoDB
 ```
 
 Ambiente local:
@@ -198,9 +229,10 @@ IdentityDb
 CampaignsDb
 DonationsDb
 KeycloakDb
+AuditLogsDb
 ```
 
-Cada servico mantem migrations proprias com Entity Framework Core e nao ha foreign keys entre databases de servicos diferentes.
+Cada servico com SQL Server mantem migrations proprias com Entity Framework Core e nao ha foreign keys entre databases de servicos diferentes. O `AuditLogsDb` pertence ao MongoDB e e mantido pelo `fcg-audit-logs`.
 
 Referencia: [ADR 0011](../adr/0011-use-sql-server-for-service-databases.md), [ADR 0012](../adr/0012-use-entity-framework-core.md), [ADR 0016](../adr/0016-use-managed-sql-on-azure.md).
 
@@ -212,7 +244,7 @@ Broker escolhido:
 Kafka
 ```
 
-O Kafka roda dentro do Kubernetes, tanto local quanto no AKS. O Kafka UI tambem roda no cluster para apoio operacional e demonstracao do topico `donation-received`.
+O Kafka roda dentro do Kubernetes, tanto local quanto no AKS. O Kafka UI tambem roda no cluster para apoio operacional e demonstracao dos topicos `donation-received` e `audit-log-requested`.
 
 Referencia: [ADR 0008](../adr/0008-use-kafka-for-donation-events.md), [ADR 0018](../adr/0018-run-kafka-inside-kubernetes.md).
 
@@ -269,6 +301,7 @@ fcg-identity
 fcg-campaigns
 fcg-donations
 fcg-donation-worker
+fcg-audit-logs
 fcg-infra
 ```
 
@@ -278,6 +311,7 @@ Componentes no `fcg-infra`:
 Keycloak
 Kafka
 Kafka UI
+MongoDB
 Prometheus
 Grafana
 componentes compartilhados
@@ -376,6 +410,12 @@ Servicos que usam Kafka adicionam:
 Infrastructure.Kafka
 ```
 
+Servicos que usam MongoDB adicionam:
+
+```text
+Infrastructure.MongoDB
+```
+
 O worker usa projeto executavel:
 
 ```text
@@ -387,6 +427,7 @@ Testes:
 - APIs: unitarios, integrados, funcionais e utilitarios quando aplicavel.
 - APIs: testes integrados tambem cobrem endpoints.
 - Worker: unitarios e integrados, sem testes funcionais.
+- `fcg-audit-logs`: unitarios e integrados para consumo Kafka, idempotencia e persistencia MongoDB.
 
 Referencia: [estrutura interna .NET](./dotnet-service-structure.md), [ADR 0023](../adr/0023-use-phase-04-dotnet-service-structure.md), [ADR 0024](../adr/0024-use-dotnet-8.md), [ADR 0025](../adr/0025-test-strategy-for-apis-and-worker.md).
 
@@ -401,7 +442,10 @@ sequenceDiagram
     participant CampaignsApi as fcg-campaigns
     participant DonationsDb as DonationsDb
     participant Kafka as Kafka donation-received
+    participant AuditKafka as Kafka audit-log-requested
     participant Worker as fcg-donation-worker
+    participant AuditWorker as fcg-audit-logs
+    participant Mongo as MongoDB AuditLogsDb
 
     Donor->>APIM: POST /donations
     APIM->>DonationsApi: encaminha requisicao
@@ -410,12 +454,16 @@ sequenceDiagram
     CampaignsApi-->>DonationsApi: campanha apta
     DonationsApi->>DonationsDb: salva Donation Pending
     DonationsApi->>DonationsDb: salva OutboxMessage
+    DonationsApi->>AuditKafka: publica AuditLogRequested DonationRequested
     DonationsApi-->>APIM: 202 Accepted
     APIM-->>Donor: 202 Accepted
     DonationsApi->>Kafka: publica DonationReceivedEvent via outbox publisher
     Worker->>Kafka: consome DonationReceivedEvent
     Worker->>CampaignsApi: POST /internal/campaigns/{id}/donation-processed
     Worker->>DonationsDb: atualiza Donation Processed ou Failed
+    Worker->>AuditKafka: publica AuditLogRequested DonationProcessed
+    AuditWorker->>AuditKafka: consome AuditLogRequested
+    AuditWorker->>Mongo: persiste audit log
 ```
 
 ## Relacao com Entregaveis do Hackathon
@@ -428,6 +476,7 @@ Requisitos cobertos pela arquitetura:
 - gestao de campanhas por `GestorONG`
 - painel publico de transparencia
 - fluxo assincrono de doacao via Kafka
+- auditoria centralizada via Kafka e MongoDB
 - worker processando doacao
 - Kubernetes local com Kind e Azure com AKS
 - YAMLs de Deployments, Services e ConfigMaps
@@ -438,7 +487,7 @@ Requisitos cobertos pela arquitetura:
 Entregaveis que ainda precisam ser produzidos:
 
 - diagrama final de arquitetura
-- documento de justificativa do SQL Server
+- documento de justificativa do SQL Server e MongoDB
 - READMEs passo a passo por repositorio
 - README do ambiente integrado no `fcg-solidarity-infra`
 - relatorio de entrega com grupo, participantes, links e video

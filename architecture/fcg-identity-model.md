@@ -46,11 +46,21 @@ Email
 
 Tabela: `ManagerProfiles`.
 
-### AuditLog
+## Auditoria
 
-Registro explicito de auditoria para eventos relevantes da identidade.
+A `fcg-identity` publica eventos explicitos de auditoria no topico Kafka `audit-log-requested`. Ela nao mantem tabela `AuditLogs` no `IdentityDb`.
 
-Tabela: `AuditLogs`.
+Eventos iniciais:
+
+```text
+DonorRegistered
+ManagerSeeded
+LoginSucceeded
+LoginFailed
+TokenRefreshed
+```
+
+O envio do evento e responsabilidade do caso de uso que conhece o significado da acao. O `fcg-audit-logs` consome o topico e persiste os registros em MongoDB.
 
 ## Endpoints principais
 
@@ -75,3 +85,4 @@ GET /me
 - A `fcg-identity` executa seed para criar ou encontrar o **GestorONG** no Keycloak, garantir a role `GestorONG` e criar ou atualizar o `ManagerProfile`.
 - A aplicacao nao armazena senha nem hash de senha.
 - Roles canonicas do MVP: `Doador` e `GestorONG`.
+- Eventos de auditoria de identidade sao publicados no Kafka pela propria `fcg-identity`, sem outbox.

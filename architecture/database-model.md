@@ -1,42 +1,52 @@
 # Modelo de Banco de Dados
 
-Este documento consolida as tabelas confirmadas por servico. A arquitetura usa SQL Server, com databases separados por servico e sem foreign keys entre databases.
+Este documento consolida as tabelas e colecoes confirmadas por servico. A arquitetura usa SQL Server para os dados operacionais dos servicos, com databases separados e sem foreign keys entre databases.
 
-## Tabela comum de auditoria
+Auditoria nao fica nos databases relacionais de cada servico. As aplicacoes publicam eventos explicitos no Kafka e o `fcg-audit-logs` persiste os registros em MongoDB.
 
-Cada servico deve manter uma tabela `AuditLogs` no proprio database. A auditoria e explicita por eventos de negocio, nao automatica pelo ChangeTracker do Entity Framework.
+## Auditoria centralizada
 
-### AuditLogs
-
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
-| --- | --- | --- | --- |
-| `Id` | `uniqueidentifier` | Sim | PK |
-| `ActorId` | `uniqueidentifier` | Nao | Perfil ou usuario que executou a acao |
-| `ActorType` | `nvarchar(50)` | Nao | Ex.: `Public`, `Doador`, `GestorONG`, `System` |
-| `Action` | `nvarchar(100)` | Sim | Evento de negocio auditado |
-| `EntityName` | `nvarchar(100)` | Sim | Entidade afetada |
-| `EntityId` | `nvarchar(100)` | Nao | Identificador da entidade afetada |
-| `OccurredAt` | `datetime2` | Sim | Data/hora UTC |
-| `CorrelationId` | `nvarchar(100)` | Nao | Correlacao da requisicao/processamento |
-| `IpAddress` | `nvarchar(45)` | Nao | IPv4 ou IPv6 quando existir requisicao HTTP |
-| `UserAgent` | `nvarchar(500)` | Nao | Quando existir requisicao HTTP |
-| `MetadataJson` | `nvarchar(max)` | Nao | Metadados sem segredos |
-
-Indices e constraints:
+Topic Kafka:
 
 ```text
-PK_AuditLogs_Id
-IX_AuditLogs_EntityName_EntityId
-IX_AuditLogs_Action
-IX_AuditLogs_OccurredAt
-IX_AuditLogs_CorrelationId
+audit-log-requested
+```
+
+Evento:
+
+```text
+AuditLogRequestedEvent
+```
+
+Cada aplicacao publica seus proprios eventos de auditoria a partir dos casos de uso relevantes. Este fluxo nao usa outbox.
+
+Payload minimo:
+
+```json
+{
+  "eventId": "uuid",
+  "occurredAt": "2026-05-18T20:00:00Z",
+  "serviceName": "fcg-identity",
+  "action": "DonorRegistered",
+  "entityName": "DonorProfile",
+  "entityId": "uuid",
+  "actorId": "uuid",
+  "actorType": "Doador",
+  "correlationId": "correlation-id",
+  "ipAddress": "127.0.0.1",
+  "userAgent": "user-agent",
+  "metadata": {}
+}
 ```
 
 Regras:
 
-- Nao armazenar senha, token, refresh token ou segredo em `MetadataJson`.
+- Nao publicar senha, token, refresh token ou segredo em `metadata`.
 - Mascarar dados sensiveis quando fizer sentido, como CPF.
 - Registrar eventos relevantes nos casos de uso/handlers, de forma explicita.
+- Nao usar auditoria automatica por ChangeTracker do Entity Framework.
+- Nao usar outbox para eventos de auditoria.
+- O `fcg-audit-logs` deve garantir idempotencia por `eventId`.
 
 ## fcg-identity
 
@@ -90,11 +100,7 @@ UX_ManagerProfiles_KeycloakUserId
 UX_ManagerProfiles_Email
 ```
 
-### AuditLogs
-
-Tabela comum de auditoria do `IdentityDb`.
-
-Eventos iniciais esperados:
+Eventos de auditoria publicados por `fcg-identity`:
 
 ```text
 DonorRegistered
@@ -162,11 +168,7 @@ IX_CampaignDonationEntries_DonationId
 CK_CampaignDonationEntries_Amount_GreaterThanZero
 ```
 
-### AuditLogs
-
-Tabela comum de auditoria do `CampaignsDb`.
-
-Eventos iniciais esperados:
+Eventos de auditoria publicados por `fcg-campaigns`:
 
 ```text
 CampaignCreated
@@ -256,11 +258,7 @@ UX_ProcessedMessages_MessageId_Topic
 IX_ProcessedMessages_ProcessedAt
 ```
 
-### AuditLogs
-
-Tabela comum de auditoria do `DonationsDb`.
-
-Eventos iniciais esperados:
+Eventos de auditoria publicados por `fcg-donations` e `fcg-donation-worker`:
 
 ```text
 DonationRequested
@@ -281,3 +279,53 @@ KeycloakDb
 ```
 
 O `KeycloakDb` pertence ao Keycloak e nao tera suas tabelas internas modeladas neste documento. A plataforma apenas provisiona o database e configura o Keycloak para usa-lo; migrations e estrutura interna sao responsabilidade do proprio Keycloak.
+
+## fcg-audit-logs
+
+Storage:
+
+```text
+MongoDB
+```
+
+Database:
+
+```text
+AuditLogsDb
+```
+
+Colecao:
+
+```text
+audit_logs
+```
+
+### audit_logs
+
+| Campo | Tipo | Obrigatorio | Observacao |
+| --- | --- | --- | --- |
+| `_id` | ObjectId | Sim | PK do MongoDB |
+| `eventId` | string/uuid | Sim | Idempotencia do evento recebido |
+| `occurredAt` | date | Sim | Data/hora UTC do evento original |
+| `receivedAt` | date | Sim | Data/hora UTC de persistencia pelo worker |
+| `serviceName` | string | Sim | Servico que publicou o evento |
+| `action` | string | Sim | Evento de negocio ou seguranca auditado |
+| `entityName` | string | Sim | Entidade afetada |
+| `entityId` | string | Nao | Identificador da entidade afetada |
+| `actorId` | string | Nao | Perfil ou usuario que executou a acao |
+| `actorType` | string | Nao | Ex.: `Public`, `Doador`, `GestorONG`, `System` |
+| `correlationId` | string | Nao | Correlacao da requisicao/processamento |
+| `ipAddress` | string | Nao | IPv4 ou IPv6 quando existir requisicao HTTP |
+| `userAgent` | string | Nao | Quando existir requisicao HTTP |
+| `metadata` | document | Nao | Metadados sem segredos |
+
+Indices:
+
+```text
+UX_audit_logs_eventId
+IX_audit_logs_serviceName_action
+IX_audit_logs_entityName_entityId
+IX_audit_logs_occurredAt
+IX_audit_logs_correlationId
+IX_audit_logs_actorId
+```

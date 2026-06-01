@@ -19,5 +19,5 @@ Os repositorios da fase 5 usarao o padrao da fase 4 com workflows reutilizaveis 
 - A politica de branch deve aceitar `feature/*`, `release/*` e `hotfix/*`.
 - O threshold minimo de cobertura sera 80%.
 - SonarCloud sera habilitado nos servicos .NET com `run_sonar: true`.
-- O padrao de chave sera `group10-tc-01_fcg-{service}` na organizacao `group10-tc-01`.
+- O padrao de chave sera `group10-tc-01_fcg-{service}` na organizacao `group10-tc-01`, incluindo `fcg-audit-logs`.
 - Secrets e variaveis seguem o contrato do `fcg-pipelines`, incluindo Azure OIDC, ACR, AKS, SonarCloud e tokens necessarios.
