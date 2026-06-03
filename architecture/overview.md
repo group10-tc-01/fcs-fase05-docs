@@ -13,9 +13,9 @@ Focos arquiteturais:
 - automacao por CI/CD e infraestrutura como codigo
 - seguranca com Keycloak, JWT e RBAC
 
-## Aplicacoes
+## Aplicacoes e repositorios de apoio
 
-Aplicacoes confirmadas:
+Aplicacoes e repositorios de apoio confirmados:
 
 ```text
 fcg-identity
@@ -25,6 +25,7 @@ fcg-donation-worker
 fcg-audit-logs
 fcg-solidarity-web
 fcg-solidarity-infra
+fcg-pipelines
 ```
 
 Responsabilidades:
@@ -36,12 +37,13 @@ Responsabilidades:
 - `fcg-audit-logs`: consumo de eventos de auditoria do Kafka e persistencia em MongoDB.
 - `fcg-solidarity-web`: interface web da plataforma.
 - `fcg-solidarity-infra`: infraestrutura compartilhada, ambiente integrado, Kubernetes, observabilidade e Terraform Azure.
+- `fcg-pipelines`: workflows reutilizaveis de CI/CD consumidos pelos repositorios da plataforma.
 
 Referencia: [ADR 0002](../adr/0002-service-boundaries-for-campaigns-and-donations.md), [ADR 0013](../adr/0013-use-separate-repositories.md).
 
 ## Repositorios
 
-Cada aplicacao tera seu proprio repositorio. O repositorio `fcg-solidarity-infra` concentrara o ambiente integrado e recursos compartilhados.
+Cada aplicacao tera seu proprio repositorio. O repositorio `fcg-solidarity-infra` concentrara o ambiente integrado e recursos compartilhados. O repositorio `fcg-pipelines` centralizara os workflows reutilizaveis de CI/CD.
 
 ```text
 fcg-identity
@@ -51,9 +53,10 @@ fcg-donation-worker
 fcg-audit-logs
 fcg-solidarity-web
 fcg-solidarity-infra
+fcg-pipelines
 ```
 
-Cada repositorio de aplicacao deve conter:
+Cada repositorio de aplicacao de negocio deve conter:
 
 - `Dockerfile`
 - `docker-compose` local da aplicacao
@@ -69,6 +72,13 @@ O `fcg-solidarity-infra` deve conter:
 - dashboards do Grafana
 - Terraform para Azure
 - README do ambiente completo
+
+O `fcg-pipelines` deve conter:
+
+- workflows reutilizaveis do GitHub Actions
+- exemplos de wrappers para as aplicacoes
+- documentacao de adocao das esteiras
+- contrato de secrets e variaveis esperados pelos workflows
 
 Referencia: [repositorios e infraestrutura](./repositories-and-infra.md).
 
@@ -356,7 +366,7 @@ Referencia: [ADR 0020](../adr/0020-run-prometheus-and-grafana-inside-kubernetes.
 
 ## CI/CD
 
-A fase 5 reutiliza o padrao da fase 4 com o repositorio `fcg-pipelines`.
+A fase 5 centraliza as esteiras no repositorio `fcg-pipelines`, consumido por wrappers pequenos em cada aplicacao.
 
 Servicos .NET:
 
@@ -364,6 +374,12 @@ Servicos .NET:
 dotnet-service-ci.yml
 dotnet-service-delivery.yml
 branch-name-check.yml
+```
+
+Aplicacoes Angular:
+
+```text
+angular-web-ci.yml
 ```
 
 Infra:
@@ -387,13 +403,13 @@ Gates confirmados:
 - deploy no AKS quando habilitado
 - healthcheck apos rollout quando URL estiver configurada
 
-O CD segue o padrao do `fcg-users`: dispara por `workflow_run` apos CI bem-sucedido na `main` e tambem por `workflow_dispatch`.
+O CD dos servicos dispara por `workflow_run` apos CI bem-sucedido na `main` e tambem por `workflow_dispatch`, quando habilitado no repositorio da aplicacao.
 
 Referencia: [ADR 0022](../adr/0022-reuse-fcg-pipelines-for-ci-cd.md).
 
 ## Estrutura Interna .NET
 
-Os servicos .NET usam .NET 8 e seguem a estrutura da fase 4.
+Os servicos .NET usam .NET 8 e seguem a estrutura padronizada da plataforma.
 
 Projetos esperados para APIs:
 

@@ -1,6 +1,6 @@
 # Repositorios e infraestrutura
 
-A fase 5 sera organizada em repositorios separados por aplicacao, com um repositorio dedicado para infraestrutura compartilhada.
+A fase 5 sera organizada em repositorios separados por aplicacao, com repositorios de apoio para infraestrutura compartilhada e pipelines reutilizaveis.
 
 ## Repositorios das aplicacoes
 
@@ -42,9 +42,23 @@ Responsabilidades:
 - Azure API Management como borda publica das APIs
 - README principal para subir o ambiente completo da demo
 
+## Repositorio de pipelines
+
+```text
+fcg-pipelines
+```
+
+Responsabilidades:
+
+- centralizar workflows reutilizaveis do GitHub Actions
+- manter esteiras de CI para servicos .NET e aplicacoes Angular
+- manter esteiras de delivery para build, scan, push de imagem e deploy quando aplicavel
+- manter workflow de Terraform para infraestrutura Azure
+- documentar inputs, secrets, variaveis e exemplos de adocao
+
 ## Padrao de CI/CD
 
-A fase 5 reutiliza o padrao da fase 4 observado em `fcg-users` e centralizado no `fcg-pipelines`.
+A fase 5 usa workflows reutilizaveis centralizados no `fcg-pipelines`.
 
 Repositorios de aplicacao .NET devem ter wrappers equivalentes a:
 
@@ -64,6 +78,12 @@ O CD chama:
 
 ```text
 group10-tc-01/fcg-pipelines/.github/workflows/dotnet-service-delivery.yml@main
+```
+
+A aplicacao Angular chama:
+
+```text
+group10-tc-01/fcg-pipelines/.github/workflows/angular-web-ci.yml@main
 ```
 
 A politica de branch chama:
@@ -93,6 +113,18 @@ Gates esperados para servicos .NET:
 - deploy no AKS quando habilitado
 - healthcheck apos rollout quando URL estiver configurada
 
+Gates esperados para aplicacoes Angular:
+
+- branch policy
+- secret scan com Gitleaks
+- dependency vulnerability scan com `npm audit`
+- verificacao de formatacao
+- lint
+- testes unitarios
+- cobertura minima
+- build Angular
+- Docker build validation
+
 ## Estrutura sugerida do fcg-solidarity-infra
 
 ```text
@@ -121,6 +153,7 @@ fcg-solidarity-infra/
 - Cada aplicacao continua dona do seu build e dos seus manifests base.
 - O Terraform fica no `fcg-solidarity-infra`.
 - O CI/CD usa wrappers locais chamando workflows reutilizaveis do `fcg-pipelines`.
+- O `fcg-pipelines` nao contem codigo de aplicacao; ele define apenas automacao compartilhada e exemplos de adocao.
 - Namespaces Kubernetes das aplicacoes sao separados por servico.
 - Componentes compartilhados de infraestrutura rodam no namespace `fcg-infra`.
 - No ambiente Azure, APIs publicas sao expostas pelo Azure API Management.

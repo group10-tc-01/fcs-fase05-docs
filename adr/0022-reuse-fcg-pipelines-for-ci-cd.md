@@ -1,20 +1,21 @@
 # Reutilizar fcg-pipelines para CI/CD
 
-Os repositorios da fase 5 usarao o padrao da fase 4 com workflows reutilizaveis do repositorio `fcg-pipelines`. Cada aplicacao manterá apenas wrappers pequenos em `.github/workflows`, enquanto a logica de CI, scans, build Docker, push para ACR, deploy em AKS e Terraform ficara centralizada no `fcg-pipelines`.
+Os repositorios da fase 5 usarao workflows reutilizaveis do repositorio `fcg-pipelines`. Cada aplicacao mantera apenas wrappers pequenos em `.github/workflows`, enquanto a logica de CI, scans, build Docker, push para ACR, deploy em AKS e Terraform ficara centralizada no `fcg-pipelines`.
 
-**Referencia da fase 4**
+**Workflows reutilizaveis**
 
-- `fcg-users` usa `users-ci.yml`, `users-cd.yml` e `branch-name.yml` como wrappers.
-- O CI chama `group10-tc-01/fcg-pipelines/.github/workflows/dotnet-service-ci.yml@main`.
-- O CD chama `group10-tc-01/fcg-pipelines/.github/workflows/dotnet-service-delivery.yml@main`.
-- A politica de branch chama `group10-tc-01/fcg-pipelines/.github/workflows/branch-name-check.yml@main`.
+- `branch-name-check.yml`: politica de nome de branch.
+- `dotnet-service-ci.yml`: CI para servicos .NET.
+- `dotnet-service-delivery.yml`: delivery para servicos com imagem Docker e deploy em AKS quando habilitado.
+- `angular-web-ci.yml`: CI para aplicacoes Angular.
+- `terraform-azure.yml`: validacao, plan e apply controlado da infraestrutura Azure.
 
 **Consequencias**
 
-- Cada repositorio da fase 5 deve configurar wrappers equivalentes ao `fcg-users`.
-- Servicos .NET usam o workflow reutilizavel `dotnet-service-ci.yml` para restore, build, testes, cobertura, secret scan, dependency scan, SonarCloud e validacao de Docker build.
+- Cada repositorio da fase 5 deve configurar wrappers locais chamando os workflows reutilizaveis do `fcg-pipelines`.
+- Servicos .NET usam `dotnet-service-ci.yml` para restore, build, testes, cobertura, secret scan, dependency scan, SonarCloud e validacao de Docker build.
 - Servicos .NET usam `dotnet-service-delivery.yml` para build, scan de imagem, push para ACR e deploy no AKS quando habilitado.
-- O CD dos servicos segue o padrao do `fcg-users`: dispara por `workflow_run` apos CI bem-sucedido na `main` e tambem por `workflow_dispatch`.
+- Aplicacoes Angular usam `angular-web-ci.yml` para `npm ci`, audit, formatacao, lint, testes, cobertura, build Angular e validacao de Docker build.
 - O repositorio `fcg-solidarity-infra` usa `terraform-azure.yml` para `fmt`, `init`, `validate`, `plan` e `apply` controlado.
 - A politica de branch deve aceitar `feature/*`, `release/*` e `hotfix/*`.
 - O threshold minimo de cobertura sera 80%.
