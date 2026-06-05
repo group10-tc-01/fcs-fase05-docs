@@ -4,7 +4,7 @@ As imagens Docker das aplicacoes serao publicadas no Azure Container Registry (A
 
 **Consequencias**
 
-- O Terraform do `fcs-solidarity-infra` deve provisionar o ACR.
+- O Terraform do `fcs-infra` deve provisionar o ACR.
 - O AKS precisa de permissao para fazer pull das imagens do ACR.
 - O ACR nao deve permitir pull anonimo.
 - Os pipelines dos repositorios de aplicacao devem versionar as tags das imagens de forma rastreavel.

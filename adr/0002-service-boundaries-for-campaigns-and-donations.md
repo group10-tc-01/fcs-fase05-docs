@@ -1,11 +1,11 @@
 # Definir aplicacoes do MVP da fase 5
 
-A plataforma sera composta por `fcs-identity`, `fcs-campaigns`, `fcs-donations`, `fcs-donation-worker`, `fcs-audit-logs` e `fcs-solidarity-web`. Essa divisao deixa explicitas as capacidades de identidade, administracao de campanhas, recebimento de intencoes de doacao, processamento assincrono, auditoria centralizada e interface web, alem de atender ao requisito de pelo menos dois microsservicos distintos.
+A plataforma sera composta por `fcs-identity`, `fcs-campaigns`, `fcs-donations`, `fcs-donation-worker`, `fcs-audit-logs`, `fcs-bff` e `fcs-web`. Essa divisao deixa explicitas as capacidades de identidade, administracao de campanhas, recebimento de intencoes de doacao, processamento assincrono, auditoria centralizada e interface web, alem de atender ao requisito de pelo menos dois microsservicos distintos.
 
 **Opcoes consideradas**
 
 - Concentrar campanhas e doacoes em uma unica API de dominio com um worker separado.
-- Separar identidade, campanhas, doacoes, worker de doacoes, worker de auditoria e frontend em aplicacoes nomeadas.
+- Separar identidade, campanhas, doacoes, worker de doacoes, worker de auditoria, BFF e frontend em aplicacoes nomeadas.
 
 **Consequencias**
 
@@ -14,4 +14,5 @@ A plataforma sera composta por `fcs-identity`, `fcs-campaigns`, `fcs-donations`,
 - `fcs-donations` fica responsavel por receber intencoes de doacao.
 - `fcs-donation-worker` fica responsavel pelo processamento assincrono das doacoes.
 - `fcs-audit-logs` fica responsavel por consumir eventos de auditoria e persistir em MongoDB.
-- `fcs-solidarity-web` fica responsavel pela experiencia web.
+- `fcs-bff` fica responsavel por agregar e adaptar contratos para a experiencia web.
+- `fcs-web` fica responsavel pela experiencia web.

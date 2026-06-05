@@ -12,7 +12,8 @@ fcs-campaigns
 fcs-donations
 fcs-donation-worker
 fcs-audit-logs
-fcs-solidarity-web
+fcs-bff
+fcs-web
 ```
 
 Cada repositorio de aplicacao deve conter:
@@ -26,7 +27,7 @@ Cada repositorio de aplicacao deve conter:
 ## Repositorio de infraestrutura
 
 ```text
-fcs-solidarity-infra
+fcs-infra
 ```
 
 Responsabilidades:
@@ -92,13 +93,13 @@ A politica de branch chama:
 group10-tc-01/fcs-pipelines/.github/workflows/branch-name-check.yml@main
 ```
 
-O `fcs-solidarity-infra` deve usar:
+O `fcs-infra` deve usar:
 
 ```text
 group10-tc-01/fcs-pipelines/.github/workflows/terraform-azure.yml@main
 ```
 
-Gates esperados para servicos .NET:
+Gates esperados para servicos .NET, incluindo o `fcs-bff`:
 
 - branch policy
 - secret scan com Gitleaks
@@ -125,10 +126,10 @@ Gates esperados para aplicacoes Angular:
 - build Angular
 - Docker build validation
 
-## Estrutura sugerida do fcs-solidarity-infra
+## Estrutura sugerida do fcs-infra
 
 ```text
-fcs-solidarity-infra/
+fcs-infra/
   docker/
     docker-compose.yml
   k8s/
@@ -151,12 +152,12 @@ fcs-solidarity-infra/
 
 - O repo de infra orquestra o ambiente completo, mas nao substitui os arquivos de cada aplicacao.
 - Cada aplicacao continua dona do seu build e dos seus manifests base.
-- O Terraform fica no `fcs-solidarity-infra`.
+- O Terraform fica no `fcs-infra`.
 - O CI/CD usa wrappers locais chamando workflows reutilizaveis do `fcs-pipelines`.
 - O `fcs-pipelines` nao contem codigo de aplicacao; ele define apenas automacao compartilhada e exemplos de adocao.
 - Namespaces Kubernetes das aplicacoes sao separados por servico.
 - Componentes compartilhados de infraestrutura rodam no namespace `fcs-infra`.
-- No ambiente Azure, APIs publicas sao expostas pelo Azure API Management.
+- No ambiente Azure, o `fcs-bff` e APIs publicas necessarias sao expostos pelo Azure API Management.
 - Endpoints `/internal/*` nao devem ser publicados no APIM.
 - Credenciais e segredos nao devem ser versionados.
 - Recursos Azure devem ser provisionados por IaC e parametrizados por ambiente.

@@ -9,7 +9,7 @@ A observabilidade do MVP usara Prometheus e Grafana rodando dentro do Kubernetes
 
 **Consequencias**
 
-- O `fcs-solidarity-infra` deve conter manifests ou Helm values para Prometheus e Grafana.
+- O `fcs-infra` deve conter manifests ou Helm values para Prometheus e Grafana.
 - A demo pode usar `kubectl port-forward` para acessar o Grafana.
 - Os servicos devem expor `/health` e, quando aplicavel, `/metrics`.
 - O dashboard minimo deve mostrar CPU/memoria dos pods e contagem de requisicoes HTTP.

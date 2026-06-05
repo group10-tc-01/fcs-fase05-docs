@@ -1,6 +1,6 @@
 # Usar Azure API Management como borda publica
 
-A plataforma usara Azure API Management (APIM) como borda publica das APIs no ambiente Azure. O APIM publicara as rotas externas da aplicacao e encaminhara as chamadas para os servicos hospedados no AKS, enquanto endpoints internos entre servicos permanecem privados no cluster.
+A plataforma usara Azure API Management (APIM) como borda publica no ambiente Azure. O APIM publicara o `fcs-bff` como fachada principal do frontend e encaminhara chamadas para servicos hospedados no AKS, enquanto endpoints internos entre servicos permanecem privados no cluster.
 
 **Opcoes consideradas**
 
@@ -10,11 +10,11 @@ A plataforma usara Azure API Management (APIM) como borda publica das APIs no am
 
 **Consequencias**
 
-- O Terraform do `fcs-solidarity-infra` deve provisionar o APIM.
-- O APIM deve expor apenas rotas publicas, como identidade, campanhas publicas/administrativas e intencoes de doacao.
+- O Terraform do `fcs-infra` deve provisionar o APIM.
+- O APIM deve expor o `fcs-bff` para o `fcs-web` e apenas rotas publicas necessarias, como identidade, campanhas publicas/administrativas e intencoes de doacao.
 - Rotas `/internal/*` continuam fora da superficie publica.
 - O AKS ainda precisa de entrada tecnica para receber trafego do APIM, mas o cliente externo deve consumir as APIs pelo APIM.
 - O APIM centraliza a exposicao publica e aplica rate limit.
 - Validacao de JWT e autorizacao RBAC permanecem dentro das APIs.
-- O APIM pode expor todas as rotas de negocio das APIs, incluindo rotas administrativas protegidas por RBAC.
+- O APIM pode expor rotas de negocio das APIs quando necessario, mas o fluxo principal do frontend passa pelo `fcs-bff`.
 - Rotas `/internal/*`, `/metrics` e `/health` nao devem ser publicadas no APIM.

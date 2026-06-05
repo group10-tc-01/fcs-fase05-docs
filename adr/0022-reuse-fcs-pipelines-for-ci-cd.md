@@ -16,7 +16,7 @@ Os repositorios da fase 5 usarao workflows reutilizaveis do repositorio `fcs-pip
 - Servicos .NET usam `dotnet-service-ci.yml` para restore, build, testes, cobertura, secret scan, dependency scan, SonarCloud e validacao de Docker build.
 - Servicos .NET usam `dotnet-service-delivery.yml` para build, scan de imagem, push para ACR e deploy no AKS quando habilitado.
 - Aplicacoes Angular usam `angular-web-ci.yml` para `npm ci`, audit, formatacao, lint, testes, cobertura, build Angular e validacao de Docker build.
-- O repositorio `fcs-solidarity-infra` usa `terraform-azure.yml` para `fmt`, `init`, `validate`, `plan` e `apply` controlado.
+- O repositorio `fcs-infra` usa `terraform-azure.yml` para `fmt`, `init`, `validate`, `plan` e `apply` controlado.
 - A politica de branch deve aceitar `feature/*`, `release/*` e `hotfix/*`.
 - O threshold minimo de cobertura sera 80%.
 - SonarCloud sera habilitado nos servicos .NET com `run_sonar: true`.

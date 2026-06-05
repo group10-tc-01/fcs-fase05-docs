@@ -23,8 +23,9 @@ fcs-campaigns
 fcs-donations
 fcs-donation-worker
 fcs-audit-logs
-fcs-solidarity-web
-fcs-solidarity-infra
+fcs-bff
+fcs-web
+fcs-infra
 fcs-pipelines
 ```
 
@@ -35,15 +36,16 @@ Responsabilidades:
 - `fcs-donations`: recebimento de intencoes de doacao e publicacao de eventos no Kafka.
 - `fcs-donation-worker`: consumo de eventos de doacao, processamento, atualizacao de status da doacao e notificacao da `fcs-campaigns`.
 - `fcs-audit-logs`: consumo de eventos de auditoria do Kafka e persistencia em MongoDB.
-- `fcs-solidarity-web`: interface web da plataforma.
-- `fcs-solidarity-infra`: infraestrutura compartilhada, ambiente integrado, Kubernetes, observabilidade e Terraform Azure.
+- `fcs-bff`: Backend for Frontend da plataforma, agregando e adaptando contratos para o `fcs-web`.
+- `fcs-web`: interface web da plataforma.
+- `fcs-infra`: infraestrutura compartilhada, ambiente integrado, Kubernetes, observabilidade e Terraform Azure.
 - `fcs-pipelines`: workflows reutilizaveis de CI/CD consumidos pelos repositorios da plataforma.
 
 Referencia: [ADR 0002](../adr/0002-service-boundaries-for-campaigns-and-donations.md), [ADR 0013](../adr/0013-use-separate-repositories.md).
 
 ## Repositorios
 
-Cada aplicacao tera seu proprio repositorio. O repositorio `fcs-solidarity-infra` concentrara o ambiente integrado e recursos compartilhados. O repositorio `fcs-pipelines` centralizara os workflows reutilizaveis de CI/CD.
+Cada aplicacao tera seu proprio repositorio. O repositorio `fcs-infra` concentrara o ambiente integrado e recursos compartilhados. O repositorio `fcs-pipelines` centralizara os workflows reutilizaveis de CI/CD.
 
 ```text
 fcs-identity
@@ -51,8 +53,9 @@ fcs-campaigns
 fcs-donations
 fcs-donation-worker
 fcs-audit-logs
-fcs-solidarity-web
-fcs-solidarity-infra
+fcs-bff
+fcs-web
+fcs-infra
 fcs-pipelines
 ```
 
@@ -64,7 +67,7 @@ Cada repositorio de aplicacao de negocio deve conter:
 - wrappers de CI/CD chamando o `fcs-pipelines`
 - README do componente
 
-O `fcs-solidarity-infra` deve conter:
+O `fcs-infra` deve conter:
 
 - docker compose integrado
 - manifests Kubernetes integrados
@@ -96,8 +99,8 @@ Doador
 Fluxos principais:
 
 ```text
-Cliente -> fcs-identity -> Keycloak
-Cliente -> APIs com JWT emitido pelo Keycloak
+Cliente -> fcs-web -> APIM -> fcs-bff -> fcs-identity -> Keycloak
+Cliente -> fcs-web -> APIM -> fcs-bff -> APIs com JWT emitido pelo Keycloak
 APIs -> validam JWT e RBAC internamente
 ```
 
@@ -290,9 +293,9 @@ Borda publica:
 Azure API Management
 ```
 
-O APIM centraliza as rotas publicas e aplica rate limit. Validacao de JWT e autorizacao RBAC ficam dentro das APIs.
+O APIM centraliza as rotas publicas e aplica rate limit. O `fcs-bff` agrega as chamadas do `fcs-web` e encaminha para as APIs de dominio. Validacao de JWT e autorizacao RBAC ficam dentro das APIs.
 
-O APIM pode expor todas as rotas de negocio das APIs, inclusive rotas administrativas protegidas por RBAC. Ele nao deve expor:
+O APIM deve expor o `fcs-bff` como fachada principal do frontend e pode manter rotas de negocio das APIs quando necessario, inclusive rotas administrativas protegidas por RBAC. Ele nao deve expor:
 
 ```text
 /internal/*
@@ -454,6 +457,7 @@ sequenceDiagram
     autonumber
     actor Donor as Doador
     participant APIM as Azure API Management
+    participant Bff as fcs-bff
     participant DonationsApi as fcs-donations
     participant CampaignsApi as fcs-campaigns
     participant DonationsDb as DonationsDb
@@ -464,14 +468,16 @@ sequenceDiagram
     participant Mongo as MongoDB AuditLogsDb
 
     Donor->>APIM: POST /donations
-    APIM->>DonationsApi: encaminha requisicao
+    APIM->>Bff: encaminha requisicao do frontend
+    Bff->>DonationsApi: encaminha intencao de doacao
     DonationsApi->>DonationsApi: valida JWT role Doador
     DonationsApi->>CampaignsApi: GET /internal/campaigns/{id}/donation-eligibility
     CampaignsApi-->>DonationsApi: campanha apta
     DonationsApi->>DonationsDb: salva Donation Pending
     DonationsApi->>DonationsDb: salva OutboxMessage
     DonationsApi->>AuditKafka: publica AuditLogRequested DonationRequested
-    DonationsApi-->>APIM: 202 Accepted
+    DonationsApi-->>Bff: 202 Accepted
+    Bff-->>APIM: 202 Accepted
     APIM-->>Donor: 202 Accepted
     DonationsApi->>Kafka: publica DonationReceivedEvent via outbox publisher
     Worker->>Kafka: consome DonationReceivedEvent
@@ -505,7 +511,7 @@ Entregaveis que ainda precisam ser produzidos:
 - diagrama final de arquitetura
 - documento de justificativa do SQL Server e MongoDB
 - READMEs passo a passo por repositorio
-- README do ambiente integrado no `fcs-solidarity-infra`
+- README do ambiente integrado no `fcs-infra`
 - relatorio de entrega com grupo, participantes, links e video
 - roteiro do video de ate 15 minutos
 

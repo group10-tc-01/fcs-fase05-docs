@@ -12,7 +12,7 @@ Os repositorios foram renomeados de `fcg-*` para `fcs-*` para refletir o nome do
 - Namespaces em codigo C# atualizados para `fcs.*` (lowercase).
 - Workflows CI/CD (`*.yml`) atualizados com novos nomes de repositorio, servico e artefatos.
 - Dockerfiles atualizados com novos caminhos e nomes de assembly.
-- `fcs-solidarity-web` renomeado para `fcs-web`.
+- Frontend web padronizado como `fcs-web`.
 
 ### Problemas encontrados e corrigidos
 
