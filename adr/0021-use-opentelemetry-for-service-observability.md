@@ -8,4 +8,4 @@ Os servicos .NET usarao OpenTelemetry para expor metricas de aplicacao e infraes
 - APIs devem instrumentar requisicoes HTTP recebidas.
 - Clientes HTTP entre servicos devem ser instrumentados.
 - O worker deve expor metricas de processamento de eventos quando possivel.
-- O `fcs-solidarity-infra` deve configurar Prometheus para scrape dos servicos.
+- O `fcs-infra` deve configurar Prometheus para scrape dos servicos.

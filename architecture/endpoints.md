@@ -32,6 +32,7 @@ Convencoes:
 - Todos os endpoints de listagem devem ter paginacao.
 - Rotas `/internal/*`, `/metrics` e `/health` nao sao publicadas no APIM.
 - Validacao de JWT e RBAC acontece nas APIs.
+- O `fcs-bff` atua como fachada para o `fcs-web`, consumindo estes endpoints e adaptando os contratos de tela sem ser dono dos dominios.
 
 ## fcs-identity
 

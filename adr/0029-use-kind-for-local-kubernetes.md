@@ -1,6 +1,6 @@
 # Usar Kind como Kubernetes local
 
-O ambiente Kubernetes local padrao da fase 5 sera Kind. O `fcs-solidarity-infra` deve conter instrucoes e scripts para criar o cluster local, carregar ou apontar imagens, aplicar manifests e subir os componentes compartilhados necessarios para a demo.
+O ambiente Kubernetes local padrao da fase 5 sera Kind. O `fcs-infra` deve conter instrucoes e scripts para criar o cluster local, carregar ou apontar imagens, aplicar manifests e subir os componentes compartilhados necessarios para a demo.
 
 **Opcoes consideradas**
 

@@ -9,6 +9,6 @@ O Kafka rodara dentro do Kubernetes nos ambientes local e AKS, acompanhado por K
 
 **Consequencias**
 
-- O `fcs-solidarity-infra` deve conter manifests ou Helm values para Kafka e Kafka UI.
+- O `fcs-infra` deve conter manifests ou Helm values para Kafka e Kafka UI.
 - O video de demonstracao pode usar Kafka UI para mostrar os topicos `donation-received` e `audit-log-requested`.
 - O cluster passa a executar tambem o broker, entao requests/limits e persistencia precisam ser configurados de forma adequada para o MVP.

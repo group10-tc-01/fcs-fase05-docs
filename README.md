@@ -18,25 +18,26 @@ Objetivos técnicos da entrega:
 
 Aplicações e repositórios:
 
-| Repositório            | Responsabilidade                                                                                               |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `fcs-identity`         | Identidade, autenticação, refresh token, cadastro de Doador, provisionamento de GestorONG e perfis de domínio. |
-| `fcs-campaigns`        | Gestão de campanhas, painel público de transparência e atualização idempotente do valor arrecadado.            |
-| `fcs-donations`        | Recebimento de intenções de doação e publicação de eventos de doação.                                          |
-| `fcs-donation-worker`  | Consumo de eventos de doação, processamento e atualização do status da doação.                                 |
-| `fcs-audit-logs`       | Consumo de eventos explícitos de auditoria e persistência em MongoDB.                                          |
-| `fcs-solidarity-web`   | Interface web da plataforma.                                                                                   |
-| `fcs-solidarity-infra` | Ambiente integrado, Kubernetes, observabilidade, Keycloak, Kafka, MongoDB e Terraform Azure.                   |
-| `fcs-pipelines`        | Workflows reutilizáveis de CI/CD consumidos pelos repositórios da plataforma.                                  |
+| Repositório           | Responsabilidade                                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `fcs-identity`        | Identidade, autenticação, refresh token, cadastro de Doador, provisionamento de GestorONG e perfis de domínio. |
+| `fcs-campaigns`       | Gestão de campanhas, painel público de transparência e atualização idempotente do valor arrecadado.            |
+| `fcs-donations`       | Recebimento de intenções de doação e publicação de eventos de doação.                                          |
+| `fcs-donation-worker` | Consumo de eventos de doação, processamento e atualização do status da doação.                                 |
+| `fcs-audit-logs`      | Consumo de eventos explícitos de auditoria e persistência em MongoDB.                                          |
+| `fcs-bff`             | Backend for Frontend da plataforma, agregando e adaptando contratos para o `fcs-web`.                          |
+| `fcs-web`             | Interface web da plataforma.                                                                                   |
+| `fcs-infra`           | Ambiente integrado, Kubernetes, observabilidade, Keycloak, Kafka, MongoDB e Terraform Azure.                   |
+| `fcs-pipelines`       | Workflows reutilizáveis de CI/CD consumidos pelos repositórios da plataforma.                                  |
 
 ## 2. Como subir localmente
 
-O ambiente integrado deve ser executado pelo repositório `fcs-solidarity-infra`, que concentra os componentes compartilhados e os manifests Kubernetes integrados.
+O ambiente integrado deve ser executado pelo repositório `fcs-infra`, que concentra os componentes compartilhados e os manifests Kubernetes integrados.
 
 Passo a passo esperado:
 
 1. Clonar todos os repositórios da Fase 05.
-2. Entrar no repositório `fcs-solidarity-infra`.
+2. Entrar no repositório `fcs-infra`.
 3. Subir o cluster local com Kind.
 4. Aplicar os manifests de infraestrutura compartilhada:
    - Keycloak
@@ -51,7 +52,8 @@ Passo a passo esperado:
    - `fcs-donations`
    - `fcs-donation-worker`
    - `fcs-audit-logs`
-   - `fcs-solidarity-web`
+   - `fcs-bff`
+   - `fcs-web`
 6. Validar os pods:
 
 ```bash
@@ -182,7 +184,8 @@ Referências:
 Atendido por:
 
 - `fcs-campaigns`
-- `fcs-solidarity-web`
+- `fcs-bff`
+- `fcs-web`
 
 Como será atendido:
 
@@ -260,8 +263,9 @@ Atendido por:
 - `fcs-donations`
 - `fcs-donation-worker`
 - `fcs-audit-logs`
-- `fcs-solidarity-web`
-- `fcs-solidarity-infra`
+- `fcs-bff`
+- `fcs-web`
+- `fcs-infra`
 
 Como será atendido:
 
@@ -327,7 +331,7 @@ Referências:
 
 Atendido por:
 
-- `fcs-solidarity-infra`
+- `fcs-infra`
 - manifests de cada aplicação
 - Kind local
 - AKS em Azure
@@ -455,9 +459,9 @@ Referências:
 
 Atendido por:
 
-- Serviços .NET com testes unitários.
+- Serviços .NET com testes unitários, incluindo o `fcs-bff`.
 - `fcs-audit-logs` com testes unitários.
-- `fcs-solidarity-web` com testes unitários Angular/Vitest.
+- `fcs-web` com testes unitários Angular/Vitest.
 - Workflows reutilizáveis do `fcs-pipelines`.
 
 Como será atendido:
@@ -568,10 +572,11 @@ Diagrama de alto nível:
 
 ```mermaid
 flowchart LR
-    Web[fcs-solidarity-web] --> APIM[Azure API Management]
-    APIM --> Identity[fcs-identity]
-    APIM --> Campaigns[fcs-campaigns]
-    APIM --> Donations[fcs-donations]
+    Web[fcs-web] --> APIM[Azure API Management]
+    APIM --> Bff[fcs-bff]
+    Bff --> Identity[fcs-identity]
+    Bff --> Campaigns[fcs-campaigns]
+    Bff --> Donations[fcs-donations]
 
     Identity --> Keycloak[Keycloak]
     Keycloak --> KeycloakDb[(KeycloakDb - SQL Server)]
@@ -579,6 +584,8 @@ flowchart LR
 
     Campaigns --> CampaignsDb[(CampaignsDb - SQL Server)]
     Donations --> DonationsDb[(DonationsDb - SQL Server)]
+
+    Bff --> Prometheus
 
     Donations --> Kafka[(Kafka)]
     Kafka --> Worker[fcs-donation-worker]
@@ -689,14 +696,14 @@ O relatório final em PDF ou TXT deve conter:
 | Endpoints administrativos para GestorONG             | Atendido                                              | `fcs-campaigns`                                   |
 | Gestão de campanhas                                  | Atendido                                              | `fcs-campaigns`                                   |
 | Cadastro público de Doador                           | Atendido                                              | `fcs-identity`                                    |
-| Painel público de transparência                      | Atendido                                              | `fcs-campaigns` + `fcs-solidarity-web`            |
+| Painel público de transparência                      | Atendido                                              | `fcs-campaigns` + `fcs-bff` + `fcs-web` |
 | Doação por Doador logado                             | Atendido                                              | `fcs-donations`                                   |
 | Bloqueio de doação para campanha concluída/cancelada | Atendido                                              | `fcs-donations` + `fcs-campaigns`                 |
 | Mínimo de dois microsserviços                        | Atendido                                              | Plataforma possui múltiplos serviços              |
 | Comunicação assíncrona                               | Atendido                                              | Kafka + `fcs-donation-worker`                     |
 | API não atualiza valor arrecadado diretamente        | Atendido                                              | Atualização feita pelo worker via `fcs-campaigns` |
 | Kubernetes                                           | Atendido                                              | Kind local e AKS                                  |
-| Deployments, Services e ConfigMaps                   | Atendido                                              | `fcs-solidarity-infra` e manifests das aplicações |
+| Deployments, Services e ConfigMaps                   | Atendido                                              | `fcs-infra` e manifests das aplicações  |
 | `/health` ou `/metrics`                              | Atendido                                              | Serviços .NET                                     |
 | Grafana com métricas reais                           | Atendido                                              | Prometheus + Grafana                              |
 | Pipeline a cada push na principal                    | Atendido                                              | GitHub Actions via `fcs-pipelines`                |
