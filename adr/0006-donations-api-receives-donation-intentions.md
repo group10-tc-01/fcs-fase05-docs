@@ -1,6 +1,6 @@
-# Receber intencoes de doacao na fcg-donations
+# Receber intencoes de doacao na fcs-donations
 
-A `fcg-donations` sera uma API separada para receber **Intencoes de Doacao** de um **Doador** autenticado, validar o pedido e publicar um evento no broker. Ela nao atualiza diretamente o valor total arrecadado da campanha, preservando o fluxo assincrono exigido pelo hackathon.
+A `fcs-donations` sera uma API separada para receber **Intencoes de Doacao** de um **Doador** autenticado, validar o pedido e publicar um evento no broker. Ela nao atualiza diretamente o valor total arrecadado da campanha, preservando o fluxo assincrono exigido pelo hackathon.
 
 **Consequencias**
 
@@ -8,4 +8,4 @@ A `fcg-donations` sera uma API separada para receber **Intencoes de Doacao** de 
 - O acesso exige role `Doador`.
 - A API valida valor maior que zero e se a campanha pode receber doacao.
 - Quando a intencao e aceita, a API persiste `Donation` com status `Pending`, registra uma `OutboxMessage` com `DonationReceivedEvent` e retorna `202 Accepted`.
-- O banco da `fcg-donations` contem `Donations`, `OutboxMessages` e `ProcessedMessages`.
+- O banco da `fcs-donations` contem `Donations`, `OutboxMessages` e `ProcessedMessages`.

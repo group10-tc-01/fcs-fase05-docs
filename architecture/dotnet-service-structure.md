@@ -1,76 +1,76 @@
 # Estrutura interna dos servicos .NET
 
-Os repositorios .NET da fase 5 seguem o padrao observado no `fcg-users` da fase 4.
+Os repositorios .NET da fase 5 seguem o padrao observado no `fcs-users` da fase 4.
 
 ## API
 
-Exemplo para `fcg-campaigns`:
+Exemplo para `fcs-campaigns`:
 
 ```text
 src/
-  FCG.Campaigns.Domain/
-  FCG.Campaigns.Application/
-  FCG.Campaigns.Infrastructure.SqlServer/
-  FCG.Campaigns.WebApi/
+  Fcs.Campaigns.Domain/
+  Fcs.Campaigns.Application/
+  Fcs.Campaigns.Infrastructure.SqlServer/
+  Fcs.Campaigns.WebApi/
 tests/
-  FCG.Campaigns.UnitTests/
-  FCG.Campaigns.IntegratedTests/
-  FCG.Campaigns.FunctionalTests/
-  FCG.Campaigns.CommonTestsUtilities/
+  Fcs.Campaigns.UnitTests/
+  Fcs.Campaigns.IntegratedTests/
+  Fcs.Campaigns.FunctionalTests/
+  Fcs.Campaigns.CommonTestsUtilities/
 ```
 
 ## API com Kafka
 
-Exemplo para `fcg-donations`:
+Exemplo para `fcs-donations`:
 
 ```text
 src/
-  FCG.Donations.Domain/
-  FCG.Donations.Application/
-  FCG.Donations.Infrastructure.SqlServer/
-  FCG.Donations.Infrastructure.Kafka/
-  FCG.Donations.Infrastructure.Campaigns/
-  FCG.Donations.WebApi/
+  Fcs.Donations.Domain/
+  Fcs.Donations.Application/
+  Fcs.Donations.Infrastructure.SqlServer/
+  Fcs.Donations.Infrastructure.Kafka/
+  Fcs.Donations.Infrastructure.Campaigns/
+  Fcs.Donations.WebApi/
 tests/
-  FCG.Donations.UnitTests/
-  FCG.Donations.IntegratedTests/
-  FCG.Donations.FunctionalTests/
-  FCG.Donations.CommonTestsUtilities/
+  Fcs.Donations.UnitTests/
+  Fcs.Donations.IntegratedTests/
+  Fcs.Donations.FunctionalTests/
+  Fcs.Donations.CommonTestsUtilities/
 ```
 
 ## Worker
 
-Exemplo para `fcg-donation-worker`:
+Exemplo para `fcs-donation-worker`:
 
 ```text
 src/
-  FCG.DonationWorker.Domain/
-  FCG.DonationWorker.Application/
-  FCG.DonationWorker.Infrastructure.SqlServer/
-  FCG.DonationWorker.Infrastructure.Kafka/
-  FCG.DonationWorker.Infrastructure.Campaigns/
-  FCG.DonationWorker.Worker/
+  Fcs.DonationWorker.Domain/
+  Fcs.DonationWorker.Application/
+  Fcs.DonationWorker.Infrastructure.SqlServer/
+  Fcs.DonationWorker.Infrastructure.Kafka/
+  Fcs.DonationWorker.Infrastructure.Campaigns/
+  Fcs.DonationWorker.Worker/
 tests/
-  FCG.DonationWorker.UnitTests/
-  FCG.DonationWorker.IntegratedTests/
-  FCG.DonationWorker.CommonTestsUtilities/
+  Fcs.DonationWorker.UnitTests/
+  Fcs.DonationWorker.IntegratedTests/
+  Fcs.DonationWorker.CommonTestsUtilities/
 ```
 
 ## Worker com MongoDB
 
-Exemplo para `fcg-audit-logs`:
+Exemplo para `fcs-audit-logs`:
 
 ```text
 src/
-  FCG.AuditLogs.Domain/
-  FCG.AuditLogs.Application/
-  FCG.AuditLogs.Infrastructure.Kafka/
-  FCG.AuditLogs.Infrastructure.MongoDB/
-  FCG.AuditLogs.Worker/
+  Fcs.AuditLogs.Domain/
+  Fcs.AuditLogs.Application/
+  Fcs.AuditLogs.Infrastructure.Kafka/
+  Fcs.AuditLogs.Infrastructure.MongoDB/
+  Fcs.AuditLogs.Worker/
 tests/
-  FCG.AuditLogs.UnitTests/
-  FCG.AuditLogs.IntegratedTests/
-  FCG.AuditLogs.CommonTestsUtilities/
+  Fcs.AuditLogs.UnitTests/
+  Fcs.AuditLogs.IntegratedTests/
+  Fcs.AuditLogs.CommonTestsUtilities/
 ```
 
 ## Convenções

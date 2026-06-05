@@ -1,6 +1,6 @@
-# Fluxo da fcg-donations
+# Fluxo da fcs-donations
 
-A `fcg-donations` recebe intencoes de doacao de um **Doador** autenticado, valida a elegibilidade da campanha na `fcg-campaigns`, persiste a doacao como pendente e usa outbox para publicar o evento `DonationReceivedEvent` no Kafka.
+A `fcs-donations` recebe intencoes de doacao de um **Doador** autenticado, valida a elegibilidade da campanha na `fcs-campaigns`, persiste a doacao como pendente e usa outbox para publicar o evento `DonationReceivedEvent` no Kafka.
 
 ## Entidades
 
@@ -46,13 +46,13 @@ Representa uma mensagem ja tratada por um consumidor para apoiar idempotencia.
 sequenceDiagram
     autonumber
     actor Donor as Doador
-    participant DonationsApi as fcg-donations API
-    participant CampaignsApi as fcg-campaigns API
+    participant DonationsApi as fcs-donations API
+    participant CampaignsApi as fcs-campaigns API
     participant DonationsDb as Donations DB
     participant OutboxPublisher as Outbox Publisher
     participant Kafka as Kafka topic donation-received
-    participant DonationWorker as fcg-donation-worker
-    participant CampaignsInternalApi as fcg-campaigns internal API
+    participant DonationWorker as fcs-donation-worker
+    participant CampaignsInternalApi as fcs-campaigns internal API
 
     Donor->>DonationsApi: POST /donations
     DonationsApi->>DonationsApi: Validate JWT role Doador
@@ -102,9 +102,9 @@ Payload minimo:
 
 - Apenas `Doador` autenticado pode criar uma intencao de doacao.
 - `Amount` deve ser maior que zero.
-- A campanha precisa estar apta a receber doacao, validada pela `fcg-campaigns` via HTTP com Refit e Polly.
-- A `fcg-donations` nao atualiza `ValorTotalArrecadado`.
+- A campanha precisa estar apta a receber doacao, validada pela `fcs-campaigns` via HTTP com Refit e Polly.
+- A `fcs-donations` nao atualiza `ValorTotalArrecadado`.
 - A publicacao no Kafka usa outbox para evitar perda de evento apos persistir a doacao.
-- A `fcg-donation-worker` atualiza o status da `Donation` para `Processed` ou `Failed` apos consumir o evento.
-- A `fcg-donation-worker` nao escreve diretamente no banco da `fcg-campaigns`; ela chama uma API interna da `fcg-campaigns` para refletir o valor arrecadado.
-- `DonorId` referencia o `DonorProfile` da `fcg-identity` sem foreign key para o `IdentityDb`.
+- A `fcs-donation-worker` atualiza o status da `Donation` para `Processed` ou `Failed` apos consumir o evento.
+- A `fcs-donation-worker` nao escreve diretamente no banco da `fcs-campaigns`; ela chama uma API interna da `fcs-campaigns` para refletir o valor arrecadado.
+- `DonorId` referencia o `DonorProfile` da `fcs-identity` sem foreign key para o `IdentityDb`.

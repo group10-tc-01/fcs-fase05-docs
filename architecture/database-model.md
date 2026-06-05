@@ -2,7 +2,7 @@
 
 Este documento consolida as tabelas e colecoes confirmadas por servico. A arquitetura usa SQL Server para os dados operacionais dos servicos, com databases separados e sem foreign keys entre databases.
 
-Auditoria nao fica nos databases relacionais de cada servico. As aplicacoes publicam eventos explicitos no Kafka e o `fcg-audit-logs` persiste os registros em MongoDB.
+Auditoria nao fica nos databases relacionais de cada servico. As aplicacoes publicam eventos explicitos no Kafka e o `fcs-audit-logs` persiste os registros em MongoDB.
 
 ## Auditoria centralizada
 
@@ -26,7 +26,7 @@ Payload minimo:
 {
   "eventId": "uuid",
   "occurredAt": "2026-05-18T20:00:00Z",
-  "serviceName": "fcg-identity",
+  "serviceName": "fcs-identity",
   "action": "DonorRegistered",
   "entityName": "DonorProfile",
   "entityId": "uuid",
@@ -46,9 +46,9 @@ Regras:
 - Registrar eventos relevantes nos casos de uso/handlers, de forma explicita.
 - Nao usar auditoria automatica por ChangeTracker do Entity Framework.
 - Nao usar outbox para eventos de auditoria.
-- O `fcg-audit-logs` deve garantir idempotencia por `eventId`.
+- O `fcs-audit-logs` deve garantir idempotencia por `eventId`.
 
-## fcg-identity
+## fcs-identity
 
 Database:
 
@@ -81,7 +81,7 @@ UX_DonorProfiles_Cpf
 
 ### ManagerProfiles
 
-Armazena o perfil de dominio do **GestorONG** provisionado por seed da `fcg-identity`.
+Armazena o perfil de dominio do **GestorONG** provisionado por seed da `fcs-identity`.
 
 | Coluna | Tipo SQL Server | Obrigatorio | Observacao |
 | --- | --- | --- | --- |
@@ -100,7 +100,7 @@ UX_ManagerProfiles_KeycloakUserId
 UX_ManagerProfiles_Email
 ```
 
-Eventos de auditoria publicados por `fcg-identity`:
+Eventos de auditoria publicados por `fcs-identity`:
 
 ```text
 DonorRegistered
@@ -110,7 +110,7 @@ LoginFailed
 TokenRefreshed
 ```
 
-## fcg-campaigns
+## fcs-campaigns
 
 Database:
 
@@ -168,7 +168,7 @@ IX_CampaignDonationEntries_DonationId
 CK_CampaignDonationEntries_Amount_GreaterThanZero
 ```
 
-Eventos de auditoria publicados por `fcg-campaigns`:
+Eventos de auditoria publicados por `fcs-campaigns`:
 
 ```text
 CampaignCreated
@@ -179,7 +179,7 @@ DonationReflected
 DuplicateDonationIgnored
 ```
 
-## fcg-donations
+## fcs-donations
 
 Database:
 
@@ -189,7 +189,7 @@ DonationsDb
 
 ### Donations
 
-Armazena a intencao de doacao aceita pela `fcg-donations`.
+Armazena a intencao de doacao aceita pela `fcs-donations`.
 
 | Coluna | Tipo SQL Server | Obrigatorio | Observacao |
 | --- | --- | --- | --- |
@@ -258,7 +258,7 @@ UX_ProcessedMessages_MessageId_Topic
 IX_ProcessedMessages_ProcessedAt
 ```
 
-Eventos de auditoria publicados por `fcg-donations` e `fcg-donation-worker`:
+Eventos de auditoria publicados por `fcs-donations` e `fcs-donation-worker`:
 
 ```text
 DonationRequested
@@ -280,7 +280,7 @@ KeycloakDb
 
 O `KeycloakDb` pertence ao Keycloak e nao tera suas tabelas internas modeladas neste documento. A plataforma apenas provisiona o database e configura o Keycloak para usa-lo; migrations e estrutura interna sao responsabilidade do proprio Keycloak.
 
-## fcg-audit-logs
+## fcs-audit-logs
 
 Storage:
 

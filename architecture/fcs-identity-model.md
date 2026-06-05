@@ -1,6 +1,6 @@
-# Modelo da fcg-identity
+# Modelo da fcs-identity
 
-A `fcg-identity` encapsula o Keycloak para cadastro, login, refresh e consulta de perfil da aplicacao. O Keycloak permanece dono das credenciais, senha, hash, emissao de JWT e roles; a `fcg-identity` armazena os perfis de dominio associados aos usuarios autenticaveis.
+A `fcs-identity` encapsula o Keycloak para cadastro, login, refresh e consulta de perfil da aplicacao. O Keycloak permanece dono das credenciais, senha, hash, emissao de JWT e roles; a `fcs-identity` armazena os perfis de dominio associados aos usuarios autenticaveis.
 
 ## Entidades
 
@@ -48,7 +48,7 @@ Tabela: `ManagerProfiles`.
 
 ## Auditoria
 
-A `fcg-identity` publica eventos explicitos de auditoria no topico Kafka `audit-log-requested`. Ela nao mantem tabela `AuditLogs` no `IdentityDb`.
+A `fcs-identity` publica eventos explicitos de auditoria no topico Kafka `audit-log-requested`. Ela nao mantem tabela `AuditLogs` no `IdentityDb`.
 
 Eventos iniciais:
 
@@ -60,7 +60,7 @@ LoginFailed
 TokenRefreshed
 ```
 
-O envio do evento e responsabilidade do caso de uso que conhece o significado da acao. O `fcg-audit-logs` consome o topico e persiste os registros em MongoDB.
+O envio do evento e responsabilidade do caso de uso que conhece o significado da acao. O `fcs-audit-logs` consome o topico e persiste os registros em MongoDB.
 
 ## Endpoints principais
 
@@ -82,7 +82,7 @@ GET /me
 
 - O cadastro publico e apenas para `Doador`.
 - O **GestorONG** e provisionado administrativamente no Keycloak e tambem registrado no `IdentityDb` como `ManagerProfile`.
-- A `fcg-identity` executa seed para criar ou encontrar o **GestorONG** no Keycloak, garantir a role `GestorONG` e criar ou atualizar o `ManagerProfile`.
+- A `fcs-identity` executa seed para criar ou encontrar o **GestorONG** no Keycloak, garantir a role `GestorONG` e criar ou atualizar o `ManagerProfile`.
 - A aplicacao nao armazena senha nem hash de senha.
 - Roles canonicas do MVP: `Doador` e `GestorONG`.
-- Eventos de auditoria de identidade sao publicados no Kafka pela propria `fcg-identity`, sem outbox.
+- Eventos de auditoria de identidade sao publicados no Kafka pela propria `fcs-identity`, sem outbox.

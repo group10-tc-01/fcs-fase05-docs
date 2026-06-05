@@ -2,7 +2,7 @@
 
 No ambiente local, os bancos SQL Server poderao rodar em container para simplificar a execucao. Na Azure, os databases relacionais da plataforma ficarao fora do AKS em um servico SQL gerenciado, mantendo persistencia e operacao de banco separadas do cluster Kubernetes.
 
-O MongoDB usado pelo `fcg-audit-logs` e tratado separadamente da decisao de SQL Server, por ser o storage especializado dos logs de auditoria.
+O MongoDB usado pelo `fcs-audit-logs` e tratado separadamente da decisao de SQL Server, por ser o storage especializado dos logs de auditoria.
 
 **Opcoes consideradas**
 
