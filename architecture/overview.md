@@ -18,42 +18,42 @@ Focos arquiteturais:
 Aplicacoes e repositorios de apoio confirmados:
 
 ```text
-fcg-identity
-fcg-campaigns
-fcg-donations
-fcg-donation-worker
-fcg-audit-logs
-fcg-solidarity-web
-fcg-solidarity-infra
-fcg-pipelines
+fcs-identity
+fcs-campaigns
+fcs-donations
+fcs-donation-worker
+fcs-audit-logs
+fcs-solidarity-web
+fcs-solidarity-infra
+fcs-pipelines
 ```
 
 Responsabilidades:
 
-- `fcg-identity`: fachada de identidade da aplicacao, integrando com Keycloak e mantendo perfis de dominio.
-- `fcg-campaigns`: administracao de campanhas, painel de transparencia e atualizacao idempotente do valor arrecadado.
-- `fcg-donations`: recebimento de intencoes de doacao e publicacao de eventos no Kafka.
-- `fcg-donation-worker`: consumo de eventos de doacao, processamento, atualizacao de status da doacao e notificacao da `fcg-campaigns`.
-- `fcg-audit-logs`: consumo de eventos de auditoria do Kafka e persistencia em MongoDB.
-- `fcg-solidarity-web`: interface web da plataforma.
-- `fcg-solidarity-infra`: infraestrutura compartilhada, ambiente integrado, Kubernetes, observabilidade e Terraform Azure.
-- `fcg-pipelines`: workflows reutilizaveis de CI/CD consumidos pelos repositorios da plataforma.
+- `fcs-identity`: fachada de identidade da aplicacao, integrando com Keycloak e mantendo perfis de dominio.
+- `fcs-campaigns`: administracao de campanhas, painel de transparencia e atualizacao idempotente do valor arrecadado.
+- `fcs-donations`: recebimento de intencoes de doacao e publicacao de eventos no Kafka.
+- `fcs-donation-worker`: consumo de eventos de doacao, processamento, atualizacao de status da doacao e notificacao da `fcs-campaigns`.
+- `fcs-audit-logs`: consumo de eventos de auditoria do Kafka e persistencia em MongoDB.
+- `fcs-solidarity-web`: interface web da plataforma.
+- `fcs-solidarity-infra`: infraestrutura compartilhada, ambiente integrado, Kubernetes, observabilidade e Terraform Azure.
+- `fcs-pipelines`: workflows reutilizaveis de CI/CD consumidos pelos repositorios da plataforma.
 
 Referencia: [ADR 0002](../adr/0002-service-boundaries-for-campaigns-and-donations.md), [ADR 0013](../adr/0013-use-separate-repositories.md).
 
 ## Repositorios
 
-Cada aplicacao tera seu proprio repositorio. O repositorio `fcg-solidarity-infra` concentrara o ambiente integrado e recursos compartilhados. O repositorio `fcg-pipelines` centralizara os workflows reutilizaveis de CI/CD.
+Cada aplicacao tera seu proprio repositorio. O repositorio `fcs-solidarity-infra` concentrara o ambiente integrado e recursos compartilhados. O repositorio `fcs-pipelines` centralizara os workflows reutilizaveis de CI/CD.
 
 ```text
-fcg-identity
-fcg-campaigns
-fcg-donations
-fcg-donation-worker
-fcg-audit-logs
-fcg-solidarity-web
-fcg-solidarity-infra
-fcg-pipelines
+fcs-identity
+fcs-campaigns
+fcs-donations
+fcs-donation-worker
+fcs-audit-logs
+fcs-solidarity-web
+fcs-solidarity-infra
+fcs-pipelines
 ```
 
 Cada repositorio de aplicacao de negocio deve conter:
@@ -61,10 +61,10 @@ Cada repositorio de aplicacao de negocio deve conter:
 - `Dockerfile`
 - `docker-compose` local da aplicacao
 - manifests Kubernetes do proprio servico
-- wrappers de CI/CD chamando o `fcg-pipelines`
+- wrappers de CI/CD chamando o `fcs-pipelines`
 - README do componente
 
-O `fcg-solidarity-infra` deve conter:
+O `fcs-solidarity-infra` deve conter:
 
 - docker compose integrado
 - manifests Kubernetes integrados
@@ -73,7 +73,7 @@ O `fcg-solidarity-infra` deve conter:
 - Terraform para Azure
 - README do ambiente completo
 
-O `fcg-pipelines` deve conter:
+O `fcs-pipelines` deve conter:
 
 - workflows reutilizaveis do GitHub Actions
 - exemplos de wrappers para as aplicacoes
@@ -84,7 +84,7 @@ Referencia: [repositorios e infraestrutura](./repositories-and-infra.md).
 
 ## Identidade e Acesso
 
-O Keycloak sera o provedor de identidade para credenciais, hash de senha, emissao de JWT e roles. O cliente nao chamara o Keycloak diretamente; ele chamara a `fcg-identity`.
+O Keycloak sera o provedor de identidade para credenciais, hash de senha, emissao de JWT e roles. O cliente nao chamara o Keycloak diretamente; ele chamara a `fcs-identity`.
 
 Roles canonicas:
 
@@ -96,12 +96,12 @@ Doador
 Fluxos principais:
 
 ```text
-Cliente -> fcg-identity -> Keycloak
+Cliente -> fcs-identity -> Keycloak
 Cliente -> APIs com JWT emitido pelo Keycloak
 APIs -> validam JWT e RBAC internamente
 ```
 
-Endpoints minimos da `fcg-identity`:
+Endpoints minimos da `fcs-identity`:
 
 ```text
 POST /auth/register/donor
@@ -110,13 +110,13 @@ POST /auth/refresh
 GET  /me
 ```
 
-O **Doador** e cadastrado publicamente pela `fcg-identity`. O **GestorONG** e provisionado por seed da `fcg-identity`, criando ou encontrando o usuario no Keycloak e sincronizando o `ManagerProfile` no `IdentityDb`.
+O **Doador** e cadastrado publicamente pela `fcs-identity`. O **GestorONG** e provisionado por seed da `fcs-identity`, criando ou encontrando o usuario no Keycloak e sincronizando o `ManagerProfile` no `IdentityDb`.
 
-Referencia: [modelo da fcg-identity](./fcg-identity-model.md), [ADR 0001](../adr/0001-keycloak-behind-identity-api.md), [ADR 0003](../adr/0003-provision-gestorong-in-keycloak.md), [ADR 0004](../adr/0004-register-doador-through-identity-api.md).
+Referencia: [modelo da fcs-identity](./fcs-identity-model.md), [ADR 0001](../adr/0001-keycloak-behind-identity-api.md), [ADR 0003](../adr/0003-provision-gestorong-in-keycloak.md), [ADR 0004](../adr/0004-register-doador-through-identity-api.md).
 
 ## Campanhas
 
-A `fcg-campaigns` e dona das campanhas e do painel publico de transparencia.
+A `fcs-campaigns` e dona das campanhas e do painel publico de transparencia.
 
 Responsabilidades:
 
@@ -133,11 +133,11 @@ Campaign
 CampaignDonationEntry
 ```
 
-Referencia: [modelo da fcg-campaigns](./fcg-campaigns-model.md), [ADR 0005](../adr/0005-campaigns-own-campaign-management-and-transparency.md).
+Referencia: [modelo da fcs-campaigns](./fcs-campaigns-model.md), [ADR 0005](../adr/0005-campaigns-own-campaign-management-and-transparency.md).
 
 ## Doacoes
 
-A `fcg-donations` recebe intencoes de doacao de um **Doador** autenticado. Ela valida o valor, consulta a `fcg-campaigns` via HTTP para saber se a campanha pode receber doacao, persiste a doacao como pendente e registra uma mensagem de outbox.
+A `fcs-donations` recebe intencoes de doacao de um **Doador** autenticado. Ela valida o valor, consulta a `fcs-campaigns` via HTTP para saber se a campanha pode receber doacao, persiste a doacao como pendente e registra uma mensagem de outbox.
 
 Entidades confirmadas:
 
@@ -167,20 +167,20 @@ Payload minimo:
 }
 ```
 
-Referencia: [fluxo da fcg-donations](./fcg-donations-flow.md), [ADR 0006](../adr/0006-donations-api-receives-donation-intentions.md), [ADR 0007](../adr/0007-validate-campaign-eligibility-over-http.md), [ADR 0008](../adr/0008-use-kafka-for-donation-events.md).
+Referencia: [fluxo da fcs-donations](./fcs-donations-flow.md), [ADR 0006](../adr/0006-donations-api-receives-donation-intentions.md), [ADR 0007](../adr/0007-validate-campaign-eligibility-over-http.md), [ADR 0008](../adr/0008-use-kafka-for-donation-events.md).
 
 ## Worker de Doacoes
 
-A `fcg-donation-worker` consome `DonationReceivedEvent` do Kafka.
+A `fcs-donation-worker` consome `DonationReceivedEvent` do Kafka.
 
 Responsabilidades:
 
 - consumir eventos do topico `donation-received`
 - registrar mensagem processada para idempotencia
-- chamar API interna da `fcg-campaigns` para refletir o valor arrecadado
+- chamar API interna da `fcs-campaigns` para refletir o valor arrecadado
 - atualizar a `Donation` para `Processed` ou `Failed`
 
-O worker nao escreve diretamente no banco da `fcg-campaigns`.
+O worker nao escreve diretamente no banco da `fcs-campaigns`.
 
 Referencia: [ADR 0009](../adr/0009-worker-updates-donation-status.md), [ADR 0010](../adr/0010-worker-updates-campaigns-through-internal-api.md).
 
@@ -200,7 +200,7 @@ Evento:
 AuditLogRequestedEvent
 ```
 
-O `fcg-audit-logs` consome o topico `audit-log-requested`, aplica idempotencia por `eventId` e persiste os registros em MongoDB. Os servicos de negocio nao possuem tabela `AuditLogs` nos seus databases SQL.
+O `fcs-audit-logs` consome o topico `audit-log-requested`, aplica idempotencia por `eventId` e persiste os registros em MongoDB. Os servicos de negocio nao possuem tabela `AuditLogs` nos seus databases SQL.
 
 Este fluxo de auditoria nao usa outbox. Falhas de publicacao devem ser observadas com logs tecnicos e metricas, mas nao bloqueiam a decisao de manter auditoria fora do banco operacional dos servicos.
 
@@ -242,7 +242,7 @@ KeycloakDb
 AuditLogsDb
 ```
 
-Cada servico com SQL Server mantem migrations proprias com Entity Framework Core e nao ha foreign keys entre databases de servicos diferentes. O `AuditLogsDb` pertence ao MongoDB e e mantido pelo `fcg-audit-logs`.
+Cada servico com SQL Server mantem migrations proprias com Entity Framework Core e nao ha foreign keys entre databases de servicos diferentes. O `AuditLogsDb` pertence ao MongoDB e e mantido pelo `fcs-audit-logs`.
 
 Referencia: [ADR 0011](../adr/0011-use-sql-server-for-service-databases.md), [ADR 0012](../adr/0012-use-entity-framework-core.md), [ADR 0016](../adr/0016-use-managed-sql-on-azure.md).
 
@@ -307,15 +307,15 @@ Referencia: [ADR 0014](../adr/0014-use-aks-as-azure-kubernetes-target.md), [ADR 
 Namespaces confirmados:
 
 ```text
-fcg-identity
-fcg-campaigns
-fcg-donations
-fcg-donation-worker
-fcg-audit-logs
-fcg-infra
+fcs-identity
+fcs-campaigns
+fcs-donations
+fcs-donation-worker
+fcs-audit-logs
+fcs-infra
 ```
 
-Componentes no `fcg-infra`:
+Componentes no `fcs-infra`:
 
 ```text
 Keycloak
@@ -366,7 +366,7 @@ Referencia: [ADR 0020](../adr/0020-run-prometheus-and-grafana-inside-kubernetes.
 
 ## CI/CD
 
-A fase 5 centraliza as esteiras no repositorio `fcg-pipelines`, consumido por wrappers pequenos em cada aplicacao.
+A fase 5 centraliza as esteiras no repositorio `fcs-pipelines`, consumido por wrappers pequenos em cada aplicacao.
 
 Servicos .NET:
 
@@ -405,7 +405,7 @@ Gates confirmados:
 
 O CD dos servicos dispara por `workflow_run` apos CI bem-sucedido na `main` e tambem por `workflow_dispatch`, quando habilitado no repositorio da aplicacao.
 
-Referencia: [ADR 0022](../adr/0022-reuse-fcg-pipelines-for-ci-cd.md).
+Referencia: [ADR 0022](../adr/0022-reuse-fcs-pipelines-for-ci-cd.md).
 
 ## Estrutura Interna .NET
 
@@ -443,7 +443,7 @@ Testes:
 - APIs: unitarios, integrados, funcionais e utilitarios quando aplicavel.
 - APIs: testes integrados tambem cobrem endpoints.
 - Worker: unitarios e integrados, sem testes funcionais.
-- `fcg-audit-logs`: unitarios e integrados para consumo Kafka, idempotencia e persistencia MongoDB.
+- `fcs-audit-logs`: unitarios e integrados para consumo Kafka, idempotencia e persistencia MongoDB.
 
 Referencia: [estrutura interna .NET](./dotnet-service-structure.md), [ADR 0023](../adr/0023-use-phase-04-dotnet-service-structure.md), [ADR 0024](../adr/0024-use-dotnet-8.md), [ADR 0025](../adr/0025-test-strategy-for-apis-and-worker.md).
 
@@ -454,13 +454,13 @@ sequenceDiagram
     autonumber
     actor Donor as Doador
     participant APIM as Azure API Management
-    participant DonationsApi as fcg-donations
-    participant CampaignsApi as fcg-campaigns
+    participant DonationsApi as fcs-donations
+    participant CampaignsApi as fcs-campaigns
     participant DonationsDb as DonationsDb
     participant Kafka as Kafka donation-received
     participant AuditKafka as Kafka audit-log-requested
-    participant Worker as fcg-donation-worker
-    participant AuditWorker as fcg-audit-logs
+    participant Worker as fcs-donation-worker
+    participant AuditWorker as fcs-audit-logs
     participant Mongo as MongoDB AuditLogsDb
 
     Donor->>APIM: POST /donations
@@ -505,7 +505,7 @@ Entregaveis que ainda precisam ser produzidos:
 - diagrama final de arquitetura
 - documento de justificativa do SQL Server e MongoDB
 - READMEs passo a passo por repositorio
-- README do ambiente integrado no `fcg-solidarity-infra`
+- README do ambiente integrado no `fcs-solidarity-infra`
 - relatorio de entrega com grupo, participantes, links e video
 - roteiro do video de ate 15 minutos
 

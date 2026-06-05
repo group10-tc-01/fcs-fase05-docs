@@ -2,7 +2,7 @@
 
 Este documento descreve os fluxos Mermaid dos endpoints confirmados. Os fluxos seguem os contratos definidos em [endpoints.md](./endpoints.md).
 
-## fcg-identity
+## fcs-identity
 
 ### POST /api/v1/auth/register/donor
 
@@ -10,7 +10,7 @@ Este documento descreve os fluxos Mermaid dos endpoints confirmados. Os fluxos s
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant Keycloak as Keycloak
     participant IdentityDb as IdentityDb
     participant AuditKafka as Kafka audit-log-requested
@@ -32,7 +32,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant IdentityDb as IdentityDb
     participant AuditKafka as Kafka audit-log-requested
 
@@ -53,7 +53,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant Keycloak as Keycloak
     participant IdentityDb as IdentityDb
     participant AuditKafka as Kafka audit-log-requested
@@ -74,7 +74,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant Keycloak as Keycloak
     participant AuditKafka as Kafka audit-log-requested
 
@@ -96,7 +96,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant Keycloak as Keycloak
     participant AuditKafka as Kafka audit-log-requested
 
@@ -114,7 +114,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant Keycloak as Keycloak
 
     Client->>IdentityApi: POST /api/v1/auth/refresh
@@ -134,7 +134,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant IdentityDb as IdentityDb
 
     Client->>IdentityApi: GET /api/v1/me with Bearer token
@@ -156,7 +156,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant IdentityApi as fcg-identity API
+    participant IdentityApi as fcs-identity API
     participant IdentityDb as IdentityDb
 
     Client->>IdentityApi: GET /api/v1/me
@@ -169,7 +169,7 @@ sequenceDiagram
     end
 ```
 
-## fcg-campaigns
+## fcs-campaigns
 
 ### POST /api/v1/campaigns
 
@@ -177,7 +177,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
     participant AuditKafka as Kafka audit-log-requested
 
@@ -196,7 +196,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
 
     Client->>CampaignsApi: POST /api/v1/campaigns
     alt Missing or invalid JWT
@@ -214,7 +214,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
     participant AuditKafka as Kafka audit-log-requested
 
@@ -234,7 +234,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
 
     Manager->>CampaignsApi: PUT /api/v1/campaigns/{id}
@@ -257,7 +257,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
     participant AuditKafka as Kafka audit-log-requested
 
@@ -282,7 +282,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
 
     Manager->>CampaignsApi: PATCH /api/v1/campaigns/{id}/status
@@ -301,7 +301,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
 
     Manager->>CampaignsApi: GET /api/v1/campaigns?page=1&pageSize=10
@@ -318,7 +318,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Manager as GestorONG
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
 
     Manager->>CampaignsApi: GET /api/v1/campaigns/{id}
@@ -339,7 +339,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant CampaignsApi as fcg-campaigns API
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
 
     Client->>CampaignsApi: GET /api/v1/transparency/campaigns?page=1&pageSize=10
@@ -354,8 +354,8 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant DonationsApi as fcg-donations
-    participant CampaignsApi as fcg-campaigns API
+    participant DonationsApi as fcs-donations
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
 
     DonationsApi->>CampaignsApi: GET /internal/campaigns/{id}/donation-eligibility
@@ -377,8 +377,8 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Worker as fcg-donation-worker
-    participant CampaignsApi as fcg-campaigns API
+    participant Worker as fcs-donation-worker
+    participant CampaignsApi as fcs-campaigns API
     participant CampaignsDb as CampaignsDb
     participant AuditKafka as Kafka audit-log-requested
 
@@ -398,7 +398,7 @@ sequenceDiagram
     end
 ```
 
-## fcg-donations
+## fcs-donations
 
 ### POST /api/v1/donations
 
@@ -406,8 +406,8 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor Donor as Doador
-    participant DonationsApi as fcg-donations API
-    participant CampaignsApi as fcg-campaigns internal API
+    participant DonationsApi as fcs-donations API
+    participant CampaignsApi as fcs-campaigns internal API
     participant DonationsDb as DonationsDb
     participant AuditKafka as Kafka audit-log-requested
 
@@ -429,8 +429,8 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant DonationsApi as fcg-donations API
-    participant CampaignsApi as fcg-campaigns internal API
+    participant DonationsApi as fcs-donations API
+    participant CampaignsApi as fcs-campaigns internal API
     participant AuditKafka as Kafka audit-log-requested
 
     Client->>DonationsApi: POST /api/v1/donations
@@ -465,7 +465,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor User as Doador or GestorONG
-    participant DonationsApi as fcg-donations API
+    participant DonationsApi as fcs-donations API
     participant DonationsDb as DonationsDb
 
     User->>DonationsApi: GET /api/v1/donations?page=1&pageSize=10
@@ -486,7 +486,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     actor Client as Cliente
-    participant DonationsApi as fcg-donations API
+    participant DonationsApi as fcs-donations API
 
     Client->>DonationsApi: GET /api/v1/donations
     alt Missing or invalid JWT
@@ -504,7 +504,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor User as Doador or GestorONG
-    participant DonationsApi as fcg-donations API
+    participant DonationsApi as fcs-donations API
     participant DonationsDb as DonationsDb
 
     User->>DonationsApi: GET /api/v1/donations/{id}
@@ -564,7 +564,7 @@ sequenceDiagram
     end
 ```
 
-## fcg-donation-worker
+## fcs-donation-worker
 
 ### Consume Kafka topic donation-received
 
@@ -572,9 +572,9 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant Kafka as Kafka donation-received
-    participant Worker as fcg-donation-worker
+    participant Worker as fcs-donation-worker
     participant DonationsDb as DonationsDb
-    participant CampaignsApi as fcg-campaigns internal API
+    participant CampaignsApi as fcs-campaigns internal API
     participant AuditKafka as Kafka audit-log-requested
 
     Worker->>Kafka: Consume DonationReceivedEvent
@@ -595,9 +595,9 @@ Falhas e idempotencia:
 sequenceDiagram
     autonumber
     participant Kafka as Kafka donation-received
-    participant Worker as fcg-donation-worker
+    participant Worker as fcs-donation-worker
     participant DonationsDb as DonationsDb
-    participant CampaignsApi as fcg-campaigns internal API
+    participant CampaignsApi as fcs-campaigns internal API
     participant AuditKafka as Kafka audit-log-requested
 
     Worker->>Kafka: Consume DonationReceivedEvent
@@ -617,7 +617,7 @@ sequenceDiagram
     end
 ```
 
-## fcg-audit-logs
+## fcs-audit-logs
 
 ### Consume Kafka topic audit-log-requested
 
@@ -625,7 +625,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant Kafka as Kafka audit-log-requested
-    participant Worker as fcg-audit-logs
+    participant Worker as fcs-audit-logs
     participant Mongo as MongoDB AuditLogsDb
 
     Worker->>Kafka: Consume AuditLogRequestedEvent
@@ -646,7 +646,7 @@ Falhas principais:
 sequenceDiagram
     autonumber
     participant Kafka as Kafka audit-log-requested
-    participant Worker as fcg-audit-logs
+    participant Worker as fcs-audit-logs
     participant Mongo as MongoDB AuditLogsDb
 
     Worker->>Kafka: Consume AuditLogRequestedEvent

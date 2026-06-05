@@ -4,7 +4,7 @@ Os servicos .NET da plataforma usarao Entity Framework Core com provider SQL Ser
 
 **Consequencias**
 
-- `fcg-identity` mantem migrations para `IdentityDb`.
-- `fcg-campaigns` mantem migrations para `CampaignsDb`.
-- `fcg-donations` mantem migrations para `DonationsDb`.
+- `fcs-identity` mantem migrations para `IdentityDb`.
+- `fcs-campaigns` mantem migrations para `CampaignsDb`.
+- `fcs-donations` mantem migrations para `DonationsDb`.
 - Constraints de unicidade e idempotencia devem ser representadas nas configuracoes do EF Core.

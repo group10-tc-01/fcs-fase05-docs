@@ -10,7 +10,7 @@ A plataforma usara Azure API Management (APIM) como borda publica das APIs no am
 
 **Consequencias**
 
-- O Terraform do `fcg-solidarity-infra` deve provisionar o APIM.
+- O Terraform do `fcs-solidarity-infra` deve provisionar o APIM.
 - O APIM deve expor apenas rotas publicas, como identidade, campanhas publicas/administrativas e intencoes de doacao.
 - Rotas `/internal/*` continuam fora da superficie publica.
 - O AKS ainda precisa de entrada tecnica para receber trafego do APIM, mas o cliente externo deve consumir as APIs pelo APIM.

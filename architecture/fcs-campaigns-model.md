@@ -1,6 +1,6 @@
-# Modelo da fcg-campaigns
+# Modelo da fcs-campaigns
 
-A `fcg-campaigns` e dona das **Campanhas**, do **Painel de Transparencia** e da atualizacao idempotente do valor arrecadado quando uma doacao e processada.
+A `fcs-campaigns` e dona das **Campanhas**, do **Painel de Transparencia** e da atualizacao idempotente do valor arrecadado quando uma doacao e processada.
 
 ## Entidades
 

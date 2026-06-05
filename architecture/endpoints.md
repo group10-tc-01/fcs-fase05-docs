@@ -1,6 +1,6 @@
 # Endpoints
 
-Este documento consolida os endpoints confirmados por servico. As respostas seguem o padrao `ApiResponse<T>` usado na fase 4 pelo `fcg-users`.
+Este documento consolida os endpoints confirmados por servico. As respostas seguem o padrao `ApiResponse<T>` usado na fase 4 pelo `fcs-users`.
 
 ## Padrao de resposta
 
@@ -33,7 +33,7 @@ Convencoes:
 - Rotas `/internal/*`, `/metrics` e `/health` nao sao publicadas no APIM.
 - Validacao de JWT e RBAC acontece nas APIs.
 
-## fcg-identity
+## fcs-identity
 
 Base path:
 
@@ -218,9 +218,9 @@ Acesso:
 Operacional, fora do APIM
 ```
 
-## fcg-donation-worker
+## fcs-donation-worker
 
-O `fcg-donation-worker` nao possui endpoints de negocio. Ele consome eventos do Kafka e executa processamento em background.
+O `fcs-donation-worker` nao possui endpoints de negocio. Ele consome eventos do Kafka e executa processamento em background.
 
 Entradas de negocio:
 
@@ -255,9 +255,9 @@ Acesso:
 Operacional, fora do APIM
 ```
 
-## fcg-audit-logs
+## fcs-audit-logs
 
-O `fcg-audit-logs` nao possui endpoints de negocio. Ele consome eventos de auditoria do Kafka e persiste os registros em MongoDB.
+O `fcs-audit-logs` nao possui endpoints de negocio. Ele consome eventos de auditoria do Kafka e persiste os registros em MongoDB.
 
 Entradas de negocio:
 
@@ -293,7 +293,7 @@ Acesso:
 Operacional, fora do APIM
 ```
 
-## fcg-donations
+## fcs-donations
 
 Base path:
 
@@ -473,7 +473,7 @@ Acesso:
 Operacional, fora do APIM
 ```
 
-## fcg-campaigns
+## fcs-campaigns
 
 Base path:
 

@@ -7,12 +7,12 @@ A fase 5 sera organizada em repositorios separados por aplicacao, com repositori
 Cada aplicacao mantem autonomia para build, execucao local simples e deploy do proprio componente.
 
 ```text
-fcg-identity
-fcg-campaigns
-fcg-donations
-fcg-donation-worker
-fcg-audit-logs
-fcg-solidarity-web
+fcs-identity
+fcs-campaigns
+fcs-donations
+fcs-donation-worker
+fcs-audit-logs
+fcs-solidarity-web
 ```
 
 Cada repositorio de aplicacao deve conter:
@@ -20,13 +20,13 @@ Cada repositorio de aplicacao deve conter:
 - `Dockerfile`
 - `docker-compose` local da propria aplicacao e dependencias minimas
 - manifests Kubernetes especificos do servico
-- wrappers de CI/CD chamando os workflows reutilizaveis do `fcg-pipelines`
+- wrappers de CI/CD chamando os workflows reutilizaveis do `fcs-pipelines`
 - README com instrucoes daquele componente
 
 ## Repositorio de infraestrutura
 
 ```text
-fcg-solidarity-infra
+fcs-solidarity-infra
 ```
 
 Responsabilidades:
@@ -45,7 +45,7 @@ Responsabilidades:
 ## Repositorio de pipelines
 
 ```text
-fcg-pipelines
+fcs-pipelines
 ```
 
 Responsabilidades:
@@ -58,7 +58,7 @@ Responsabilidades:
 
 ## Padrao de CI/CD
 
-A fase 5 usa workflows reutilizaveis centralizados no `fcg-pipelines`.
+A fase 5 usa workflows reutilizaveis centralizados no `fcs-pipelines`.
 
 Repositorios de aplicacao .NET devem ter wrappers equivalentes a:
 
@@ -71,31 +71,31 @@ Repositorios de aplicacao .NET devem ter wrappers equivalentes a:
 O CI chama:
 
 ```text
-group10-tc-01/fcg-pipelines/.github/workflows/dotnet-service-ci.yml@main
+group10-tc-01/fcs-pipelines/.github/workflows/dotnet-service-ci.yml@main
 ```
 
 O CD chama:
 
 ```text
-group10-tc-01/fcg-pipelines/.github/workflows/dotnet-service-delivery.yml@main
+group10-tc-01/fcs-pipelines/.github/workflows/dotnet-service-delivery.yml@main
 ```
 
 A aplicacao Angular chama:
 
 ```text
-group10-tc-01/fcg-pipelines/.github/workflows/angular-web-ci.yml@main
+group10-tc-01/fcs-pipelines/.github/workflows/angular-web-ci.yml@main
 ```
 
 A politica de branch chama:
 
 ```text
-group10-tc-01/fcg-pipelines/.github/workflows/branch-name-check.yml@main
+group10-tc-01/fcs-pipelines/.github/workflows/branch-name-check.yml@main
 ```
 
-O `fcg-solidarity-infra` deve usar:
+O `fcs-solidarity-infra` deve usar:
 
 ```text
-group10-tc-01/fcg-pipelines/.github/workflows/terraform-azure.yml@main
+group10-tc-01/fcs-pipelines/.github/workflows/terraform-azure.yml@main
 ```
 
 Gates esperados para servicos .NET:
@@ -125,10 +125,10 @@ Gates esperados para aplicacoes Angular:
 - build Angular
 - Docker build validation
 
-## Estrutura sugerida do fcg-solidarity-infra
+## Estrutura sugerida do fcs-solidarity-infra
 
 ```text
-fcg-solidarity-infra/
+fcs-solidarity-infra/
   docker/
     docker-compose.yml
   k8s/
@@ -151,13 +151,13 @@ fcg-solidarity-infra/
 
 - O repo de infra orquestra o ambiente completo, mas nao substitui os arquivos de cada aplicacao.
 - Cada aplicacao continua dona do seu build e dos seus manifests base.
-- O Terraform fica no `fcg-solidarity-infra`.
-- O CI/CD usa wrappers locais chamando workflows reutilizaveis do `fcg-pipelines`.
-- O `fcg-pipelines` nao contem codigo de aplicacao; ele define apenas automacao compartilhada e exemplos de adocao.
+- O Terraform fica no `fcs-solidarity-infra`.
+- O CI/CD usa wrappers locais chamando workflows reutilizaveis do `fcs-pipelines`.
+- O `fcs-pipelines` nao contem codigo de aplicacao; ele define apenas automacao compartilhada e exemplos de adocao.
 - Namespaces Kubernetes das aplicacoes sao separados por servico.
-- Componentes compartilhados de infraestrutura rodam no namespace `fcg-infra`.
+- Componentes compartilhados de infraestrutura rodam no namespace `fcs-infra`.
 - No ambiente Azure, APIs publicas sao expostas pelo Azure API Management.
 - Endpoints `/internal/*` nao devem ser publicados no APIM.
 - Credenciais e segredos nao devem ser versionados.
 - Recursos Azure devem ser provisionados por IaC e parametrizados por ambiente.
-- O `fcg-audit-logs` consome o topico `audit-log-requested` e persiste auditoria em MongoDB.
+- O `fcs-audit-logs` consome o topico `audit-log-requested` e persiste auditoria em MongoDB.

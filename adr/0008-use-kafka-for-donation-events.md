@@ -1,6 +1,6 @@
 # Usar Kafka para eventos de doacao
 
-A plataforma usara Kafka como broker de mensageria para o fluxo assincrono de doacoes. A `fcg-donations` publicara `DonationReceivedEvent` em um topico Kafka e a `fcg-donation-worker` consumira esse evento para processar a doacao e refletir o valor arrecadado.
+A plataforma usara Kafka como broker de mensageria para o fluxo assincrono de doacoes. A `fcs-donations` publicara `DonationReceivedEvent` em um topico Kafka e a `fcs-donation-worker` consumira esse evento para processar a doacao e refletir o valor arrecadado.
 
 **Opcoes consideradas**
 
