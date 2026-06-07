@@ -117,10 +117,10 @@ Cliente → API (publica evento) → Broker (RabbitMQ ou Kafka) → Worker (cons
 
 ---
 
-### Observabilidade (Grafana)
+### Observabilidade (Datadog)
 
 - A aplicação deve expor endpoint de saúde: `/health` ou `/metrics`.
-- O Grafana deve ter **pelo menos um dashboard** com métricas reais, por exemplo:
+- O Datadog deve ter **pelo menos um dashboard** com métricas reais, por exemplo:
   - Consumo de CPU/Memória dos pods
   - Contagem de requisições HTTP
 
@@ -162,7 +162,7 @@ O vídeo deve cobrir obrigatoriamente:
 
 1. Explicação do diagrama de arquitetura.
 2. Pipeline de CI executando e gerando a imagem Docker com sucesso.
-3. Terminal com `kubectl get pods` e dashboard do Grafana com dados em tempo real.
+3. Terminal com `kubectl get pods` e dashboard do Datadog com dados em tempo real.
 4. Demonstração funcional:
    - Autenticação via Postman/Swagger e obtenção do token JWT.
    - Criação de uma campanha.

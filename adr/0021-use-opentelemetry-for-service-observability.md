@@ -1,6 +1,6 @@
 # Usar OpenTelemetry nos servicos
 
-Os servicos .NET usarao OpenTelemetry para expor metricas de aplicacao e infraestrutura via endpoint `/metrics`, alem de health checks em `/health`. O Prometheus coletara essas metricas e o Grafana exibira dashboards com dados reais do cluster e das aplicacoes.
+Os servicos .NET usarao OpenTelemetry para instrumentar metricas, traces e chamadas HTTP, alem de health checks em `/health`. O Datadog Agent coletara metricas do Kubernetes e recebera a telemetria das aplicacoes para exibicao em dashboards e APM.
 
 **Consequencias**
 
@@ -8,4 +8,4 @@ Os servicos .NET usarao OpenTelemetry para expor metricas de aplicacao e infraes
 - APIs devem instrumentar requisicoes HTTP recebidas.
 - Clientes HTTP entre servicos devem ser instrumentados.
 - O worker deve expor metricas de processamento de eventos quando possivel.
-- O `fcs-infra` deve configurar Prometheus para scrape dos servicos.
+- O `fcs-infra` deve configurar Datadog Agent e Cluster Agent para coleta de metricas do cluster e das aplicacoes.

@@ -12,7 +12,7 @@ Objetivos técnicos da entrega:
 - Proteger acesso com JWT e RBAC.
 - Processar doações de forma assíncrona via Kafka.
 - Rodar localmente em Kubernetes com Kind.
-- Expor métricas reais para Prometheus e Grafana.
+- Expor métricas reais com Datadog.
 - Automatizar build, testes, segurança e imagem Docker com GitHub Actions.
 - Preparar a infraestrutura Azure com AKS, ACR, Key Vault, API Management e Terraform.
 
@@ -44,8 +44,8 @@ Passo a passo esperado:
    - Kafka
    - Kafka UI
    - MongoDB
-   - Prometheus
-   - Grafana
+   - Datadog Agent
+   - Datadog Cluster Agent
 5. Aplicar os manifests das aplicações:
    - `fcs-identity`
    - `fcs-campaigns`
@@ -61,7 +61,7 @@ kubectl get pods --all-namespaces
 ```
 
 7. Acessar os endpoints públicos via API Management no Azure ou via port-forward/ingress no ambiente local.
-8. Acessar Grafana para acompanhar métricas reais dos pods e das requisições.
+8. Acessar Datadog para acompanhar métricas reais dos pods e das requisições.
 9. Acessar Kafka UI para demonstrar os tópicos `donation-received` e `audit-log-requested`.
 
 Cada aplicação também deve manter seu próprio README com instruções específicas de build, testes, Docker e variáveis locais.
@@ -363,21 +363,21 @@ Referências:
 - [ADR 0026 - Namespaces separados](./adr/0026-use-separated-kubernetes-namespaces.md)
 - [ADR 0029 - Kind local](./adr/0029-use-kind-for-local-kubernetes.md)
 
-### 4.4 Observabilidade com Grafana
+### 4.4 Observabilidade com Datadog
 
 Atendido por:
 
-- Prometheus
-- Grafana
+- Datadog Agent
+- Datadog Cluster Agent
 - OpenTelemetry nos serviços .NET
 - endpoints `/health` e `/metrics`
 
 Como será atendido:
 
 - Serviços expõem `/health` para saúde.
-- Serviços expõem `/metrics` para Prometheus/OpenTelemetry.
-- Prometheus coleta métricas.
-- Grafana exibe dashboards com métricas reais.
+- Serviços expõem `/metrics` quando aplicável para telemetria operacional.
+- Datadog Agent coleta métricas do Kubernetes e das aplicações.
+- Datadog exibe dashboards com métricas reais e APM.
 
 Métricas mínimas previstas:
 
@@ -394,7 +394,7 @@ Observação:
 Referências:
 
 - [Overview da arquitetura](./architecture/overview.md)
-- [ADR 0020 - Prometheus e Grafana no Kubernetes](./adr/0020-run-prometheus-and-grafana-inside-kubernetes.md)
+- [ADR 0020 - Datadog para observabilidade](./adr/0020-use-datadog-for-observability.md)
 - [ADR 0021 - OpenTelemetry](./adr/0021-use-opentelemetry-for-service-observability.md)
 
 ### 4.5 Pipeline de CI/CD
@@ -585,7 +585,7 @@ flowchart LR
     Campaigns --> CampaignsDb[(CampaignsDb - SQL Server)]
     Donations --> DonationsDb[(DonationsDb - SQL Server)]
 
-    Bff --> Prometheus
+    Bff --> Datadog
 
     Donations --> Kafka[(Kafka)]
     Kafka --> Worker[fcs-donation-worker]
@@ -599,12 +599,12 @@ flowchart LR
     AuditTopic --> AuditWorker[fcs-audit-logs]
     AuditWorker --> Mongo[(AuditLogsDb - MongoDB)]
 
-    Prometheus[Prometheus] --> Grafana[Grafana]
-    Identity --> Prometheus
-    Campaigns --> Prometheus
-    Donations --> Prometheus
-    Worker --> Prometheus
-    AuditWorker --> Prometheus
+    Datadog[Datadog]
+    Identity --> Datadog
+    Campaigns --> Datadog
+    Donations --> Datadog
+    Worker --> Datadog
+    AuditWorker --> Datadog
 ```
 
 O PDF final de arquitetura deve incluir:
@@ -613,7 +613,7 @@ O PDF final de arquitetura deve incluir:
 - Bancos de dados.
 - Kafka.
 - Worker.
-- Observabilidade com Prometheus e Grafana.
+- Observabilidade com Datadog.
 - API Gateway com Azure API Management.
 - Kubernetes local com Kind e Azure com AKS.
 
@@ -629,7 +629,7 @@ Mostrar:
 - Bancos por serviço.
 - Kafka e worker.
 - Auditoria centralizada.
-- Prometheus/Grafana.
+- Datadog.
 - APIM como borda pública.
 
 ### 8.2 Pipeline de CI
@@ -645,7 +645,7 @@ Mostrar:
 - Docker build validation.
 - Geração ou validação da imagem Docker.
 
-### 8.3 Kubernetes e Grafana
+### 8.3 Kubernetes e Datadog
 
 Mostrar no terminal:
 
@@ -653,7 +653,7 @@ Mostrar no terminal:
 kubectl get pods --all-namespaces
 ```
 
-Mostrar no Grafana:
+Mostrar no Datadog:
 
 - Métricas reais dos pods.
 - Requisições HTTP.
@@ -705,7 +705,7 @@ O relatório final em PDF ou TXT deve conter:
 | Kubernetes                                           | Atendido                                              | Kind local e AKS                                  |
 | Deployments, Services e ConfigMaps                   | Atendido                                              | `fcs-infra` e manifests das aplicações  |
 | `/health` ou `/metrics`                              | Atendido                                              | Serviços .NET                                     |
-| Grafana com métricas reais                           | Atendido                                              | Prometheus + Grafana                              |
+| Datadog com métricas reais                           | Atendido                                              | Datadog Agent + Datadog Cluster Agent             |
 | Pipeline a cada push na principal                    | Atendido                                              | GitHub Actions via `fcs-pipelines`                |
 | Compilar código na pipeline                          | Atendido                                              | `.NET build` e `npm run build`                    |
 | Gerar ou validar imagem Docker                       | Atendido                                              | Docker build validation e delivery                |
