@@ -9,5 +9,5 @@ As aplicacoes terao namespaces Kubernetes separados por servico, enquanto compon
 - `fcs-donations` roda no namespace `fcs-donations`.
 - `fcs-donation-worker` roda no namespace `fcs-donation-worker`.
 - `fcs-audit-logs` roda no namespace `fcs-audit-logs`.
-- Keycloak, Kafka, Kafka UI, MongoDB, Prometheus, Grafana e componentes compartilhados rodam em `fcs-infra`.
+- Keycloak, Kafka, Kafka UI, MongoDB, Datadog Agent, Datadog Cluster Agent e componentes compartilhados rodam em `fcs-infra`.
 - Pipelines de CD devem usar o namespace correspondente ao servico.

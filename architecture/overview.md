@@ -71,8 +71,8 @@ O `fcs-infra` deve conter:
 
 - docker compose integrado
 - manifests Kubernetes integrados
-- configuracoes de Keycloak, Kafka, Kafka UI, MongoDB, Prometheus e Grafana
-- dashboards do Grafana
+- configuracoes de Keycloak, Kafka, Kafka UI, MongoDB e Datadog
+- dashboards do Datadog
 - Terraform para Azure
 - README do ambiente completo
 
@@ -325,8 +325,8 @@ Keycloak
 Kafka
 Kafka UI
 MongoDB
-Prometheus
-Grafana
+Datadog Agent
+Datadog Cluster Agent
 componentes compartilhados
 ```
 
@@ -349,7 +349,7 @@ Referencia: [ADR 0027](../adr/0027-keep-internal-apis-cluster-private.md).
 
 ## Observabilidade
 
-Prometheus e Grafana rodam dentro do Kubernetes. Os servicos .NET usam OpenTelemetry.
+Datadog Agent e Datadog Cluster Agent rodam dentro do Kubernetes. Os servicos .NET usam OpenTelemetry ou Datadog APM.
 
 Endpoints operacionais:
 
@@ -365,7 +365,7 @@ Dashboard minimo:
 - status dos pods
 - metricas de processamento do worker quando possivel
 
-Referencia: [ADR 0020](../adr/0020-run-prometheus-and-grafana-inside-kubernetes.md), [ADR 0021](../adr/0021-use-opentelemetry-for-service-observability.md).
+Referencia: [ADR 0020](../adr/0020-use-datadog-for-observability.md), [ADR 0021](../adr/0021-use-opentelemetry-for-service-observability.md).
 
 ## CI/CD
 
@@ -502,7 +502,7 @@ Requisitos cobertos pela arquitetura:
 - worker processando doacao
 - Kubernetes local com Kind e Azure com AKS
 - YAMLs de Deployments, Services e ConfigMaps
-- Grafana com metricas reais
+- Datadog com metricas reais
 - CI/CD com build .NET e imagem Docker
 - APIM como API Gateway na Azure
 

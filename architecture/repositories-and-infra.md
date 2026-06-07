@@ -38,7 +38,7 @@ Responsabilidades:
 - configuracao de Keycloak para realm, clients e roles
 - configuracao de Kafka e Kafka UI
 - configuracao de MongoDB para auditoria centralizada
-- configuracao de Prometheus e dashboards do Grafana
+- configuracao do Datadog Agent, Datadog Cluster Agent e dashboards do Datadog
 - Terraform para provisionar recursos na Azure
 - Azure API Management como borda publica das APIs
 - README principal para subir o ambiente completo da demo
@@ -139,7 +139,7 @@ fcs-infra/
   keycloak/
   kafka/
   mongodb/
-  grafana/
+  datadog/
     dashboards/
   terraform/
     environments/

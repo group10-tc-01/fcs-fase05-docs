@@ -211,7 +211,7 @@ Operacional, fora do APIM
 
 ### GET /metrics
 
-Endpoint operacional de metricas Prometheus/OpenTelemetry.
+Endpoint operacional de metricas OpenTelemetry/Datadog.
 
 Acesso:
 
@@ -248,7 +248,7 @@ Operacional, fora do APIM
 
 ### GET /metrics
 
-Endpoint operacional de metricas Prometheus/OpenTelemetry.
+Endpoint operacional de metricas OpenTelemetry/Datadog.
 
 Acesso:
 
@@ -286,7 +286,7 @@ Operacional, fora do APIM
 
 ### GET /metrics
 
-Endpoint operacional de metricas Prometheus/OpenTelemetry.
+Endpoint operacional de metricas OpenTelemetry/Datadog.
 
 Acesso:
 
@@ -466,7 +466,7 @@ Operacional, fora do APIM
 
 ### GET /metrics
 
-Endpoint operacional de metricas Prometheus/OpenTelemetry.
+Endpoint operacional de metricas OpenTelemetry/Datadog.
 
 Acesso:
 
@@ -797,7 +797,7 @@ Operacional, fora do APIM
 
 ### GET /metrics
 
-Endpoint operacional de metricas Prometheus/OpenTelemetry.
+Endpoint operacional de metricas OpenTelemetry/Datadog.
 
 Acesso:
 
