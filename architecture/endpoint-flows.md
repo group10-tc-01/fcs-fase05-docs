@@ -245,7 +245,7 @@ sequenceDiagram
         CampaignsApi-->>Manager: 404 Not Found ApiResponse error
     else Campaign is Completed or Canceled
         CampaignsDb-->>CampaignsApi: Campaign closed
-        CampaignsApi-->>Manager: 409 Conflict ApiResponse error
+        CampaignsApi-->>Manager: 400 Bad Request ApiResponse error
     else Invalid request
         CampaignsApi-->>Manager: 400 Bad Request ApiResponse error
     end
@@ -291,7 +291,7 @@ sequenceDiagram
     alt Campaign not found
         CampaignsApi-->>Manager: 404 Not Found ApiResponse error
     else Invalid status or transition
-        CampaignsApi-->>Manager: 409 Conflict ApiResponse error
+        CampaignsApi-->>Manager: 400 Bad Request ApiResponse error
     end
 ```
 
@@ -309,7 +309,7 @@ sequenceDiagram
     CampaignsApi->>CampaignsApi: Validate pagination and filters
     CampaignsApi->>CampaignsDb: Query paginated campaigns
     CampaignsDb-->>CampaignsApi: Paged campaigns
-    CampaignsApi-->>Manager: 200 OK ApiResponse<PagedList<CampaignSummary>>
+    CampaignsApi-->>Manager: 200 OK ApiResponse<PagedResponse<CampaignResponse>>
 ```
 
 ### GET /api/v1/campaigns/{id}
@@ -346,7 +346,7 @@ sequenceDiagram
     CampaignsApi->>CampaignsApi: Validate pagination
     CampaignsApi->>CampaignsDb: Query Active campaigns
     CampaignsDb-->>CampaignsApi: Paged active campaigns
-    CampaignsApi-->>Client: 200 OK ApiResponse<PagedList<TransparencyCampaign>>
+    CampaignsApi-->>Client: 200 OK ApiResponse<PagedResponse<TransparencyCampaign>>
 ```
 
 ### GET /internal/campaigns/{id}/donation-eligibility
@@ -368,7 +368,7 @@ sequenceDiagram
         CampaignsApi-->>DonationsApi: 404 Not Found
     else Campaign Completed or Canceled
         CampaignsDb-->>CampaignsApi: Campaign closed
-        CampaignsApi-->>DonationsApi: 409 Conflict eligible false
+        CampaignsApi-->>DonationsApi: 200 OK eligible false
     end
 ```
 
@@ -448,9 +448,9 @@ sequenceDiagram
         DonationsApi-->>Client: 404 Not Found ApiResponse error
     else Campaign closed
         DonationsApi->>CampaignsApi: GET /internal/campaigns/{id}/donation-eligibility
-        CampaignsApi-->>DonationsApi: 409 Conflict
+        CampaignsApi-->>DonationsApi: 200 OK eligible false
         DonationsApi->>AuditKafka: Publish AuditLogRequested DonationRejected
-        DonationsApi-->>Client: 409 Conflict ApiResponse error
+        DonationsApi-->>Client: 400 Bad Request ApiResponse error
     else Campaign service unavailable
         DonationsApi->>CampaignsApi: GET /internal/campaigns/{id}/donation-eligibility with Polly
         CampaignsApi--x DonationsApi: Timeout or unavailable

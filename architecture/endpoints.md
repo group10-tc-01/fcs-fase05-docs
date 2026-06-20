@@ -588,7 +588,6 @@ Erros esperados:
 401 Unauthorized
 403 Forbidden
 404 Not Found
-409 Conflict
 ```
 
 Regra:
@@ -615,13 +614,22 @@ Request:
 }
 ```
 
-Valores aceitos:
+Valores reconhecidos pelo enum:
 
 ```text
 Active
 Completed
 Canceled
 ```
+
+Destinos aceitos pela operacao:
+
+```text
+Completed
+Canceled
+```
+
+O valor `Active` e reconhecido, mas retorna `400 Bad Request` porque nao representa uma transicao permitida.
 
 Transicoes permitidas:
 
@@ -660,7 +668,6 @@ Erros esperados:
 401 Unauthorized
 403 Forbidden
 404 Not Found
-409 Conflict
 ```
 
 ### GET /api/v1/campaigns
@@ -676,9 +683,18 @@ GestorONG
 Query params iniciais:
 
 ```text
-status
+status (pode ser repetido, por exemplo status=Active&status=Completed)
 page
 pageSize
+```
+
+Regras de paginacao:
+
+```text
+page menor que 1 e normalizado para 1.
+pageSize fora do intervalo de 1 a 100 e normalizado para 10.
+Filtros de status duplicados sao ignorados.
+Sem filtro de status, todas as campanhas sao consideradas.
 ```
 
 Response `200 OK`:
@@ -714,6 +730,16 @@ Acesso:
 
 ```text
 GestorONG
+```
+
+Response `200 OK`: `ApiResponse<CampaignResponse>`.
+
+Erros esperados:
+
+```text
+401 Unauthorized
+403 Forbidden
+404 Not Found
 ```
 
 ### GET /api/v1/transparency/campaigns
@@ -763,6 +789,14 @@ Acesso:
 
 ```text
 Interno, fora do APIM
+```
+
+Resultados:
+
+```text
+Campanha Active: 200 OK com eligible true.
+Campanha Completed ou Canceled: 200 OK com eligible false.
+Campanha inexistente: 404 Not Found.
 ```
 
 ### POST /internal/campaigns/{id}/donation-processed
