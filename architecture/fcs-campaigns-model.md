@@ -43,9 +43,9 @@ Administrativos:
 ```text
 POST   /campaigns
 PUT    /campaigns/{id}
-PATCH  /campaigns/{id}/complete
-PATCH  /campaigns/{id}/cancel
+PATCH  /campaigns/{id}/status
 GET    /campaigns
+GET    /campaigns/{id}
 ```
 
 Publicos:
@@ -80,6 +80,9 @@ Payload de `POST /internal/campaigns/{id}/donation-processed`:
 - Transicoes de status permitidas: `Active -> Completed` e `Active -> Canceled`.
 - Campanhas `Completed` ou `Canceled` nao podem voltar para `Active` nem trocar entre si.
 - O painel publico lista apenas campanhas com status `Active` e usa paginacao.
+- As listagens retornam `items`, `page`, `pageSize` e `totalCount`.
+- A listagem administrativa aceita filtros de status repetidos e ignora valores duplicados.
+- `page` menor que 1 e normalizado para 1; `pageSize` fora de 1 a 100 e normalizado para 10.
 - `EndDate` nao pode estar no passado.
 - `FinancialGoal` deve ser maior que zero.
 - Uma campanha com status `Completed` ou `Canceled` nao pode receber doacao.
