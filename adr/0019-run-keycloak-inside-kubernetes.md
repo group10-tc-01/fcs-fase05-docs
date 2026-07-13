@@ -1,10 +1,8 @@
 # Rodar Keycloak dentro do Kubernetes
 
-O Keycloak rodara dentro do Kubernetes nos ambientes local e AKS, usando `KeycloakDb` no banco SQL gerenciado na Azure. A configuracao de realm, clients e roles ficara no `fcs-infra`, sem versionar segredos reais.
+Keycloak roda no K3s com banco dedicado no SQL Server. Realm, clients e roles são bootstrapados pela plataforma; a `fcs-identity` é a fachada para login, refresh e cadastro.
 
-**Consequencias**
+## Consequências
 
-- O AKS executa o Keycloak junto dos servicos da plataforma.
-- O banco do Keycloak fica fora do cluster no ambiente Azure.
-- O `fcs-infra` deve conter configuracoes de realm, clients e roles `GestorONG` e `Doador`.
-- A `fcs-identity` continua sendo a fachada usada pelos clientes para login, refresh e cadastro.
+- Keycloak não recebe Ingress público por padrão.
+- Credenciais de administração ficam no Infisical, não nos manifests.

@@ -1,14 +1,8 @@
 # Rodar Kafka dentro do Kubernetes
 
-O Kafka rodara dentro do Kubernetes nos ambientes local e AKS, acompanhado por Kafka UI para apoio operacional e demonstracao. Essa escolha simplifica a paridade entre ambiente local e Azure e facilita mostrar topicos e mensagens no video do hackathon.
+Kafka e Kafka UI rodam no K3s, no namespace `fcs-infra`, para atender os tópicos `donation-received` e `audit-log-requested`.
 
-**Opcoes consideradas**
+## Consequências
 
-- Rodar Kafka dentro do Kubernetes.
-- Usar um servico Kafka gerenciado fora do cluster.
-
-**Consequencias**
-
-- O `fcs-infra` deve conter manifests ou Helm values para Kafka e Kafka UI.
-- O video de demonstracao pode usar Kafka UI para mostrar os topicos `donation-received` e `audit-log-requested`.
-- O cluster passa a executar tambem o broker, entao requests/limits e persistencia precisam ser configurados de forma adequada para o MVP.
+- A plataforma configura persistência, requests e limits para o MVP.
+- Kafka UI auxilia a demonstração e a operação sem ser exposta sem controle administrativo.
