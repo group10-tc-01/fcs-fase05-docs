@@ -13,7 +13,7 @@ Os `docker-compose` de cada aplicação continuam sendo o caminho de desenvolvim
 - [Requisitos do hackathon](hackaton.md)
 - [Arquitetura](architecture/overview.md)
 - [Repositórios e infraestrutura](architecture/repositories-and-infra.md)
-- [Endpoints](architecture/endpoints.md)
+- [Endpoints](architecture/endpoint-flows.md)
 - [ADRs](adr/)
 
 ## Rastreabilidade do hackathon
@@ -31,4 +31,4 @@ Os `docker-compose` de cada aplicação continuam sendo o caminho de desenvolvim
 
 ## Decisão de plataforma
 
-[ADR 0032](adr/0032-use-vps-k3s-platform.md) registra a VPS Hostinger, K3s, Traefik, GHCR, Infisical, Datadog, HCP Terraform e GitHub Actions como padrão integrado.
+[ADR 0024](adr/0024-use-vps-k3s-platform.md) registra a VPS Hostinger, K3s, Traefik, GHCR, Infisical, Datadog, HCP Terraform e GitHub Actions como padrão integrado.

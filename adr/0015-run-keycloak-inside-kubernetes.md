@@ -1,6 +1,6 @@
 # Rodar Keycloak dentro do Kubernetes
 
-Keycloak roda no K3s com banco dedicado no SQL Server. Realm, clients e roles são bootstrapados pela plataforma; a `fcs-identity` é a fachada para login, refresh e cadastro.
+Keycloak roda no K3s com banco dedicado no SQL Server. Realm, clients e roles são inicializados pela plataforma; a `fcs-identity` é a fachada para login, refresh e cadastro.
 
 ## Consequências
 

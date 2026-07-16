@@ -1,6 +1,6 @@
 # Reutilizar fcs-pipelines para CI/CD
 
-Aplicações mantêm workflows-wrapper e chamam os workflows reutilizáveis de `fcs-pipelines` para CI, publicação GHCR e delivery no K3s.
+Aplicações mantêm workflows-wrapper e chamam os workflows reutilizáveis de `fcs-pipelines` para CI, publicação no GHCR e delivery no K3s.
 
 ## Consequências
 

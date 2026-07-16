@@ -1,8 +1,8 @@
-# Modelo de Banco de Dados
+# Modelo de banco de dados
 
-Este documento consolida as tabelas e colecoes confirmadas por servico. A arquitetura usa SQL Server para os dados operacionais dos servicos, com databases separados e sem foreign keys entre databases.
+Este documento consolida as tabelas e coleções confirmadas por serviço. A arquitetura usa SQL Server para os dados operacionais dos serviços, com databases separados e sem foreign keys entre databases.
 
-Auditoria nao fica nos databases relacionais de cada servico. As aplicacoes publicam eventos explicitos no Kafka e o `fcs-audit-logs` persiste os registros em MongoDB.
+Auditoria não fica nos databases relacionais de cada serviço. As aplicações publicam eventos explícitos no Kafka e o `fcs-audit-logs` persiste os registros em MongoDB.
 
 ## Auditoria centralizada
 
@@ -18,9 +18,9 @@ Evento:
 AuditLogRequestedEvent
 ```
 
-Cada aplicacao publica seus proprios eventos de auditoria a partir dos casos de uso relevantes. Este fluxo nao usa outbox.
+Cada aplicação publica seus próprios eventos de auditoria a partir dos casos de uso relevantes. Este fluxo não usa outbox.
 
-Payload minimo:
+Payload mínimo:
 
 ```json
 {
@@ -41,12 +41,12 @@ Payload minimo:
 
 Regras:
 
-- Nao publicar senha, token, refresh token ou segredo em `metadata`.
-- Mascarar dados sensiveis quando fizer sentido, como CPF.
-- Registrar eventos relevantes nos casos de uso/handlers, de forma explicita.
-- Nao usar auditoria automatica por ChangeTracker do Entity Framework.
-- Nao usar outbox para eventos de auditoria.
-- O `fcs-audit-logs` deve garantir idempotencia por `eventId`.
+- Não publicar senha, token, refresh token ou segredo em `metadata`.
+- Mascarar dados sensíveis quando fizer sentido, como CPF.
+- Registrar eventos relevantes nos casos de uso/handlers, de forma explícita.
+- Não usar auditoria automática por ChangeTracker do Entity Framework.
+- Não usar outbox para eventos de auditoria.
+- O `fcs-audit-logs` deve garantir idempotência por `eventId`.
 
 ## fcs-identity
 
@@ -58,9 +58,9 @@ IdentityDb
 
 ### DonorProfiles
 
-Armazena o perfil de dominio do **Doador** cadastrado pela aplicacao. Credenciais e senha ficam no Keycloak.
+Armazena o perfil de domínio do **Doador** cadastrado pela aplicação. Credenciais e senha ficam no Keycloak.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
 | `KeycloakUserId` | `nvarchar(100)` | Sim | Unique |
@@ -68,9 +68,9 @@ Armazena o perfil de dominio do **Doador** cadastrado pela aplicacao. Credenciai
 | `Email` | `nvarchar(320)` | Sim | Unique |
 | `Cpf` | `nvarchar(14)` | Sim | Unique |
 | `CreatedAt` | `datetime2` | Sim |  |
-| `UpdatedAt` | `datetime2` | Nao |  |
+| `UpdatedAt` | `datetime2` | Não |  |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_DonorProfiles_Id
@@ -81,18 +81,18 @@ UX_DonorProfiles_Cpf
 
 ### ManagerProfiles
 
-Armazena o perfil de dominio do **GestorONG** provisionado por seed da `fcs-identity`.
+Armazena o perfil de domínio do **GestorONG** provisionado por seed da `fcs-identity`.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
 | `KeycloakUserId` | `nvarchar(100)` | Sim | Unique |
 | `FullName` | `nvarchar(200)` | Sim |  |
 | `Email` | `nvarchar(320)` | Sim | Unique |
 | `CreatedAt` | `datetime2` | Sim |  |
-| `UpdatedAt` | `datetime2` | Nao |  |
+| `UpdatedAt` | `datetime2` | Não |  |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_ManagerProfiles_Id
@@ -120,23 +120,23 @@ CampaignsDb
 
 ### Campaigns
 
-Armazena as campanhas de arrecadacao administradas por **GestorONG**.
+Armazena as campanhas de arrecadação administradas por **GestorONG**.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
 | `Title` | `nvarchar(200)` | Sim |  |
 | `Description` | `nvarchar(2000)` | Sim |  |
 | `StartDate` | `datetime2` | Sim |  |
-| `EndDate` | `datetime2` | Sim | Nao pode estar no passado ao criar/editar |
+| `EndDate` | `datetime2` | Sim | Não pode estar no passado ao criar/editar |
 | `FinancialGoal` | `decimal(18,2)` | Sim | Deve ser maior que zero |
 | `Status` | `nvarchar(30)` | Sim | `Active`, `Completed`, `Canceled` |
-| `TotalAmountRaised` | `decimal(18,2)` | Sim | Valor agregado a partir das doacoes processadas |
-| `CreatedByManagerId` | `uniqueidentifier` | Sim | Referencia externa ao `ManagerProfile`, sem FK |
+| `TotalAmountRaised` | `decimal(18,2)` | Sim | Valor agregado a partir das doações processadas |
+| `CreatedByManagerId` | `uniqueidentifier` | Sim | Referência externa ao `ManagerProfile`, sem FK |
 | `CreatedAt` | `datetime2` | Sim |  |
-| `UpdatedAt` | `datetime2` | Nao |  |
+| `UpdatedAt` | `datetime2` | Não |  |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_Campaigns_Id
@@ -148,17 +148,17 @@ CK_Campaigns_TotalAmountRaised_GreaterOrEqualZero
 
 ### CampaignDonationEntries
 
-Armazena as doacoes ja refletidas no valor arrecadado de uma campanha, garantindo idempotencia por `DonationId`.
+Armazena as doações já refletidas no valor arrecadado de uma campanha, garantindo idempotência por `DonationId`.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
 | `CampaignId` | `uniqueidentifier` | Sim | FK para `Campaigns` |
-| `DonationId` | `uniqueidentifier` | Sim | Id da doacao no `DonationsDb`, sem FK entre databases |
+| `DonationId` | `uniqueidentifier` | Sim | Id da doação no `DonationsDb`, sem FK entre databases |
 | `Amount` | `decimal(18,2)` | Sim | Deve ser maior que zero |
 | `ProcessedAt` | `datetime2` | Sim |  |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_CampaignDonationEntries_Id
@@ -189,20 +189,20 @@ DonationsDb
 
 ### Donations
 
-Armazena a intencao de doacao aceita pela `fcs-donations`.
+Armazena a intenção de doação aceita pela `fcs-donations`.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
-| `CampaignId` | `uniqueidentifier` | Sim | Referencia externa a campanha, sem FK entre databases |
-| `DonorId` | `uniqueidentifier` | Sim | Referencia externa ao `DonorProfile`, sem FK entre databases |
+| `CampaignId` | `uniqueidentifier` | Sim | Referência externa à campanha, sem FK entre databases |
+| `DonorId` | `uniqueidentifier` | Sim | Referência externa ao `DonorProfile`, sem FK entre databases |
 | `Amount` | `decimal(18,2)` | Sim | Deve ser maior que zero |
 | `Status` | `nvarchar(30)` | Sim | `Pending`, `Processed`, `Failed` |
 | `CreatedAt` | `datetime2` | Sim |  |
-| `ProcessedAt` | `datetime2` | Nao | Preenchido pelo worker ao finalizar processamento |
-| `FailureReason` | `nvarchar(1000)` | Nao | Preenchido pelo worker quando `Status = Failed` |
+| `ProcessedAt` | `datetime2` | Não | Preenchido pelo worker ao finalizar processamento |
+| `FailureReason` | `nvarchar(1000)` | Não | Preenchido pelo worker quando `Status = Failed` |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_Donations_Id
@@ -215,21 +215,21 @@ CK_Donations_Amount_GreaterThanZero
 
 ### OutboxMessages
 
-Armazena eventos pendentes de publicacao no Kafka, garantindo que uma doacao aceita nao perca seu evento.
+Armazena eventos pendentes de publicação no Kafka, garantindo que uma doação aceita não perca seu evento.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
-| `AggregateId` | `uniqueidentifier` | Sim | Id da entidade relacionada, para `DonationReceivedEvent` sera `Donation.Id` |
+| `AggregateId` | `uniqueidentifier` | Sim | Id da entidade relacionada, para `DonationReceivedEvent` será `Donation.Id` |
 | `EventType` | `nvarchar(200)` | Sim | Ex.: `DonationReceivedEvent` |
 | `Payload` | `nvarchar(max)` | Sim | JSON do evento |
 | `Status` | `nvarchar(30)` | Sim | `Pending`, `Published`, `Failed` |
 | `CreatedAt` | `datetime2` | Sim |  |
-| `PublishedAt` | `datetime2` | Nao |  |
+| `PublishedAt` | `datetime2` | Não |  |
 | `RetryCount` | `int` | Sim | Default `0` |
-| `LastError` | `nvarchar(2000)` | Nao |  |
+| `LastError` | `nvarchar(2000)` | Não |  |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_OutboxMessages_Id
@@ -241,16 +241,16 @@ CK_OutboxMessages_RetryCount_GreaterOrEqualZero
 
 ### ProcessedMessages
 
-Armazena mensagens ja tratadas por consumidor para apoiar idempotencia no processamento do Kafka.
+Armazena mensagens já tratadas por consumidor para apoiar idempotência no processamento do Kafka.
 
-| Coluna | Tipo SQL Server | Obrigatorio | Observacao |
+| Coluna | Tipo SQL Server | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `Id` | `uniqueidentifier` | Sim | PK |
 | `MessageId` | `uniqueidentifier` | Sim | Id do evento, como `eventId` |
 | `Topic` | `nvarchar(200)` | Sim | Ex.: `donation-received` |
 | `ProcessedAt` | `datetime2` | Sim |  |
 
-Indices e constraints:
+Índices e constraints:
 
 ```text
 PK_ProcessedMessages_Id
@@ -278,7 +278,7 @@ Database:
 KeycloakDb
 ```
 
-O `KeycloakDb` pertence ao Keycloak e nao tera suas tabelas internas modeladas neste documento. A plataforma apenas provisiona o database e configura o Keycloak para usa-lo; migrations e estrutura interna sao responsabilidade do proprio Keycloak.
+O `KeycloakDb` pertence ao Keycloak e não terá suas tabelas internas modeladas neste documento. A plataforma apenas provisiona o database e configura o Keycloak para usá-lo; migrations e estrutura interna são responsabilidade do próprio Keycloak.
 
 ## fcs-audit-logs
 
@@ -294,7 +294,7 @@ Database:
 AuditLogsDb
 ```
 
-Colecao:
+Coleção:
 
 ```text
 audit_logs
@@ -302,24 +302,24 @@ audit_logs
 
 ### audit_logs
 
-| Campo | Tipo | Obrigatorio | Observacao |
+| Campo | Tipo | Obrigatório | Observação |
 | --- | --- | --- | --- |
 | `_id` | ObjectId | Sim | PK do MongoDB |
-| `eventId` | string/uuid | Sim | Idempotencia do evento recebido |
+| `eventId` | string/uuid | Sim | Idempotência do evento recebido |
 | `occurredAt` | date | Sim | Data/hora UTC do evento original |
-| `receivedAt` | date | Sim | Data/hora UTC de persistencia pelo worker |
-| `serviceName` | string | Sim | Servico que publicou o evento |
-| `action` | string | Sim | Evento de negocio ou seguranca auditado |
+| `receivedAt` | date | Sim | Data/hora UTC de persistência pelo worker |
+| `serviceName` | string | Sim | Serviço que publicou o evento |
+| `action` | string | Sim | Evento de negócio ou segurança auditado |
 | `entityName` | string | Sim | Entidade afetada |
-| `entityId` | string | Nao | Identificador da entidade afetada |
-| `actorId` | string | Nao | Perfil ou usuario que executou a acao |
-| `actorType` | string | Nao | Ex.: `Public`, `Doador`, `GestorONG`, `System` |
-| `correlationId` | string | Nao | Correlacao da requisicao/processamento |
-| `ipAddress` | string | Nao | IPv4 ou IPv6 quando existir requisicao HTTP |
-| `userAgent` | string | Nao | Quando existir requisicao HTTP |
-| `metadata` | document | Nao | Metadados sem segredos |
+| `entityId` | string | Não | Identificador da entidade afetada |
+| `actorId` | string | Não | Perfil ou usuário que executou a ação |
+| `actorType` | string | Não | Ex.: `Public`, `Doador`, `GestorONG`, `System` |
+| `correlationId` | string | Não | Correlação da requisição/processamento |
+| `ipAddress` | string | Não | IPv4 ou IPv6 quando existir requisição HTTP |
+| `userAgent` | string | Não | Quando existir requisição HTTP |
+| `metadata` | document | Não | Metadados sem segredos |
 
-Indices:
+Índices:
 
 ```text
 UX_audit_logs_eventId

@@ -1,16 +1,16 @@
-# Usar Kafka para eventos de doacao
+# Usar Kafka para eventos de doação
 
-A plataforma usara Kafka como broker de mensageria para o fluxo assincrono de doacoes. A `fcs-donations` publicara `DonationReceivedEvent` em um topico Kafka e a `fcs-donation-worker` consumira esse evento para processar a doacao e refletir o valor arrecadado.
+A plataforma usará Kafka como broker de mensageria para o fluxo assíncrono de doações. A `fcs-donations` publicará `DonationReceivedEvent` em um tópico Kafka e a `fcs-donation-worker` consumirá esse evento para processar a doação e refletir o valor arrecadado.
 
-**Opcoes consideradas**
+**Opções consideradas**
 
 - Usar RabbitMQ.
 - Usar Kafka.
 
-**Consequencias**
+**Consequências**
 
 - O ambiente local e Kubernetes devem incluir Kafka.
-- A demonstracao deve mostrar o topico Kafka e as mensagens usando uma interface como Kafka UI.
-- O contrato do evento `DonationReceivedEvent` passa a ser parte importante da integracao entre API e worker.
-- O topico inicial sera `donation-received`.
-- O payload minimo do evento contem `eventId`, `donationId`, `campaignId`, `donorId`, `amount` e `occurredAt`.
+- A demonstração deve mostrar o tópico Kafka e as mensagens usando uma interface como Kafka UI.
+- O contrato do evento `DonationReceivedEvent` passa a ser parte importante da integração entre API e worker.
+- O tópico inicial será `donation-received`.
+- O payload mínimo do evento contém `eventId`, `donationId`, `campaignId`, `donorId`, `amount` e `occurredAt`.

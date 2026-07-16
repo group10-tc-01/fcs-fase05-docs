@@ -1,6 +1,6 @@
 # Usar VPS Hostinger com K3s como plataforma integrada
 
-O ambiente integrado da Conexão Solidária roda em uma VPS Hostinger com K3s. Terraform no `fcs-infra` administra o host, o cluster e os componentes compartilhados.
+O ambiente integrado da Conexão Solidária roda em uma VPS Hostinger com K3s. O Terraform no `fcs-infra` administra o host, o cluster e os componentes compartilhados.
 
 ## Decisões
 

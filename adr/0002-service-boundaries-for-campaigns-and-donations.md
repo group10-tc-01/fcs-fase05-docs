@@ -1,18 +1,18 @@
-# Definir aplicacoes do MVP da fase 5
+# Definir aplicações do MVP da fase 5
 
-A plataforma sera composta por `fcs-identity`, `fcs-campaigns`, `fcs-donations`, `fcs-donation-worker`, `fcs-audit-logs`, `fcs-bff` e `fcs-web`. Essa divisao deixa explicitas as capacidades de identidade, administracao de campanhas, recebimento de intencoes de doacao, processamento assincrono, auditoria centralizada e interface web, alem de atender ao requisito de pelo menos dois microsservicos distintos.
+A plataforma será composta por `fcs-identity`, `fcs-campaigns`, `fcs-donations`, `fcs-donation-worker`, `fcs-audit-logs`, `fcs-bff` e `fcs-web`. Essa divisão deixa explícitas as capacidades de identidade, administração de campanhas, recebimento de intenções de doação, processamento assíncrono, auditoria centralizada e interface web, além de atender ao requisito de pelo menos dois microsserviços distintos.
 
-**Opcoes consideradas**
+**Opções consideradas**
 
-- Concentrar campanhas e doacoes em uma unica API de dominio com um worker separado.
-- Separar identidade, campanhas, doacoes, worker de doacoes, worker de auditoria, BFF e frontend em aplicacoes nomeadas.
+- Concentrar campanhas e doações em uma única API de domínio com um worker separado.
+- Separar identidade, campanhas, doações, worker de doações, worker de auditoria, BFF e frontend em aplicações nomeadas.
 
-**Consequencias**
+**Consequências**
 
-- `fcs-identity` encapsula a integracao com Keycloak e os perfis da aplicacao.
-- `fcs-campaigns` fica responsavel por campanhas e painel publico de transparencia.
-- `fcs-donations` fica responsavel por receber intencoes de doacao.
-- `fcs-donation-worker` fica responsavel pelo processamento assincrono das doacoes.
-- `fcs-audit-logs` fica responsavel por consumir eventos de auditoria e persistir em MongoDB.
-- `fcs-bff` fica responsavel por agregar e adaptar contratos para a experiencia web.
-- `fcs-web` fica responsavel pela experiencia web.
+- `fcs-identity` encapsula a integração com Keycloak e os perfis da aplicação.
+- `fcs-campaigns` fica responsável por campanhas e painel público de transparência.
+- `fcs-donations` fica responsável por receber intenções de doação.
+- `fcs-donation-worker` fica responsável pelo processamento assíncrono das doações.
+- `fcs-audit-logs` fica responsável por consumir eventos de auditoria e persistir em MongoDB.
+- `fcs-bff` fica responsável por agregar e adaptar contratos para a experiência web.
+- `fcs-web` fica responsável pela experiência web.

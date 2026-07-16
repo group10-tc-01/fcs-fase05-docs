@@ -1,14 +1,14 @@
 # Validar elegibilidade da campanha via HTTP
 
-A `fcs-donations` validara se uma **Campanha** pode receber **Intencao de Doacao** chamando a `fcs-campaigns` via HTTP antes de publicar o evento no Kafka. O cliente HTTP sera implementado com Refit e politicas de resiliencia com Polly, mantendo o contrato explicito e tratando falhas transientes entre servicos.
+A `fcs-donations` validará se uma **Campanha** pode receber **Intenção de Doação** chamando a `fcs-campaigns` via HTTP antes de publicar o evento no Kafka. O cliente HTTP será implementado com Refit e políticas de resiliência com Polly, mantendo o contrato explícito e tratando falhas transientes entre serviços.
 
-**Opcoes consideradas**
+**Opções consideradas**
 
-- Consultar a `fcs-campaigns` via HTTP no momento da doacao.
-- Manter uma copia local do status da campanha na `fcs-donations` por eventos de campanha.
+- Consultar a `fcs-campaigns` via HTTP no momento da doação.
+- Manter uma cópia local do status da campanha na `fcs-donations` por eventos de campanha.
 
-**Consequencias**
+**Consequências**
 
-- A `fcs-donations` depende da disponibilidade da `fcs-campaigns` para aceitar novas intencoes de doacao.
-- A validacao usa o estado atual da campanha, sem read model duplicado.
-- O MVP evita sincronizacao adicional de eventos de campanha.
+- A `fcs-donations` depende da disponibilidade da `fcs-campaigns` para aceitar novas intenções de doação.
+- A validação usa o estado atual da campanha, sem read model duplicado.
+- O MVP evita sincronização adicional de eventos de campanha.
