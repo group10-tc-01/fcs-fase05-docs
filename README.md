@@ -1,34 +1,20 @@
 # Conexão Solidária — documentação da entrega
 
-A Conexão Solidária é o MVP da ONG Esperança Solidária para campanhas, doações e transparência pública. A plataforma usa microsserviços .NET, Kafka e Kubernetes.
-
-## Ambiente oficial
-
-O ambiente integrado é uma VPS Hostinger com K3s. O `fcs-infra` declara a plataforma com Terraform; Traefik publica somente os Ingresses necessários, Infisical sincroniza secrets e Datadog recebe a telemetria.
-
-Os `docker-compose` de cada aplicação continuam sendo o caminho de desenvolvimento local e de correção do hackathon. Eles não substituem o ambiente integrado.
+Este repositório é a fonte de verdade arquitetural da Fase 05. Os READMEs dos serviços apontam para estes documentos, sem duplicar contratos, decisões e cenários de falha.
 
 ## Navegação
 
 - [Requisitos do hackathon](hackaton.md)
-- [Arquitetura](architecture/overview.md)
+- [Visão geral da arquitetura](architecture/overview.md)
 - [Repositórios e infraestrutura](architecture/repositories-and-infra.md)
-- [Endpoints](architecture/endpoint-flows.md)
+- [Fluxos de endpoints e workers](architecture/endpoint-flows.md)
+- [Modelos de identidade, campanhas, doações e banco](architecture/)
 - [ADRs](adr/)
 
-## Rastreabilidade do hackathon
+## Uso e contribuição
 
-| Critério | Componentes responsáveis |
-| --- | --- |
-| JWT, RBAC e cadastro de Doador | `fcs-identity` + Keycloak |
-| Campanhas e painel de transparência | `fcs-campaign` |
-| Intenção de doação assíncrona | `fcs-donations` + Kafka |
-| Processamento e atualização do valor arrecadado | `fcs-donation-worker` + `fcs-campaign` |
-| Auditoria de negócio | `fcs-audit-logs` + MongoDB |
-| Frontend e agregação de APIs | `fcs-web` + `fcs-bff` |
-| Kubernetes, TLS, secrets e observabilidade | `fcs-infra` + `fcs-vps-infra-guide` |
-| CI, imagens GHCR e delivery | `fcs-pipelines` |
+Mantenha nomes de repositório, contratos, diagramas e ADRs consistentes com a implementação. Novas decisões arquiteturais devem receber um ADR sequencial; mudanças de comportamento devem atualizar primeiro os modelos e fluxos relevantes antes dos READMEs consumidores.
 
-## Decisão de plataforma
+## Ambiente integrado
 
-[ADR 0024](adr/0024-use-vps-k3s-platform.md) registra a VPS Hostinger, K3s, Traefik, GHCR, Infisical, Datadog, HCP Terraform e GitHub Actions como padrão integrado.
+A plataforma oficial utiliza VPS Hostinger com K3s, Traefik, GHCR, Infisical e Datadog. O `fcs-infra` mantém a plataforma compartilhada; cada aplicação mantém seu deployment e pipeline.
