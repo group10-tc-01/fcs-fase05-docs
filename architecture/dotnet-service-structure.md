@@ -1,6 +1,6 @@
-# Estrutura interna dos servicos .NET
+# Estrutura interna dos serviços .NET
 
-Os repositorios .NET da fase 5 seguem o padrao observado no `fcs-users` da fase 4.
+Os repositórios .NET da fase 5 seguem o padrão observado no `fcs-users` da fase 4.
 
 ## API
 
@@ -44,16 +44,10 @@ Exemplo para `fcs-donation-worker`:
 
 ```text
 src/
-  Fcs.DonationWorker.Domain/
   Fcs.DonationWorker.Application/
-  Fcs.DonationWorker.Infrastructure.SqlServer/
-  Fcs.DonationWorker.Infrastructure.Kafka/
-  Fcs.DonationWorker.Infrastructure.Campaigns/
   Fcs.DonationWorker.Worker/
 tests/
   Fcs.DonationWorker.UnitTests/
-  Fcs.DonationWorker.IntegratedTests/
-  Fcs.DonationWorker.CommonTestsUtilities/
 ```
 
 ## Worker com MongoDB
@@ -62,24 +56,19 @@ Exemplo para `fcs-audit-logs`:
 
 ```text
 src/
-  Fcs.AuditLogs.Domain/
   Fcs.AuditLogs.Application/
-  Fcs.AuditLogs.Infrastructure.Kafka/
-  Fcs.AuditLogs.Infrastructure.MongoDB/
   Fcs.AuditLogs.Worker/
 tests/
   Fcs.AuditLogs.UnitTests/
-  Fcs.AuditLogs.IntegratedTests/
-  Fcs.AuditLogs.CommonTestsUtilities/
 ```
 
 ## Convenções
 
-- Codigo, namespaces, DTOs, eventos e topicos tecnicos ficam em ingles.
-- Documentacao de dominio continua em pt-BR.
-- Cada repositorio tem solution propria.
-- Cada servico mantem migrations proprias.
-- Servicos com MongoDB nao usam migrations EF Core; devem declarar indices e bootstrap da colecao na infraestrutura.
-- APIs mantem testes unitarios, integrados e funcionais quando aplicavel.
-- Testes integrados das APIs tambem cobrem endpoints.
-- Worker mantem testes unitarios e integrados, sem projeto de testes funcionais.
+- Código, namespaces, DTOs, eventos e tópicos técnicos ficam em inglês.
+- Documentação de domínio continua em pt-BR.
+- Cada repositório tem solution própria.
+- Cada serviço mantém migrations próprias.
+- Serviços com MongoDB não usam migrations EF Core; devem declarar índices e bootstrap da coleção na infraestrutura.
+- APIs mantêm testes unitários, integrados e funcionais quando aplicável.
+- Testes integrados das APIs também cobrem endpoints.
+- Worker mantém testes unitários e integrados, sem projeto de testes funcionais.

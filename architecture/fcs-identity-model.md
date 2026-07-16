@@ -1,12 +1,12 @@
 # Modelo da fcs-identity
 
-A `fcs-identity` encapsula o Keycloak para cadastro, login, refresh e consulta de perfil da aplicacao. O Keycloak permanece dono das credenciais, senha, hash, emissao de JWT e roles; a `fcs-identity` armazena os perfis de dominio associados aos usuarios autenticaveis.
+A `fcs-identity` encapsula o Keycloak para cadastro, login, refresh e consulta de perfil da aplicação. O Keycloak permanece dono das credenciais, senha, hash, emissão de JWT e roles; a `fcs-identity` armazena os perfis de domínio associados aos usuários autenticáveis.
 
 ## Entidades
 
 ### DonorProfile
 
-Representa o perfil de dominio de um **Doador** cadastrado pela aplicacao.
+Representa o perfil de domínio de um **Doador** cadastrado pela aplicação.
 
 - `Id`
 - `KeycloakUserId`
@@ -16,7 +16,7 @@ Representa o perfil de dominio de um **Doador** cadastrado pela aplicacao.
 - `CreatedAt`
 - `UpdatedAt`
 
-Restricoes de unicidade:
+Restrições de unicidade:
 
 ```text
 KeycloakUserId
@@ -28,7 +28,7 @@ Tabela: `DonorProfiles`.
 
 ### ManagerProfile
 
-Representa o perfil de dominio de um **GestorONG** provisionado administrativamente.
+Representa o perfil de domínio de um **GestorONG** provisionado administrativamente.
 
 - `Id`
 - `KeycloakUserId`
@@ -37,7 +37,7 @@ Representa o perfil de dominio de um **GestorONG** provisionado administrativame
 - `CreatedAt`
 - `UpdatedAt`
 
-Restricoes de unicidade:
+Restrições de unicidade:
 
 ```text
 KeycloakUserId
@@ -48,7 +48,7 @@ Tabela: `ManagerProfiles`.
 
 ## Auditoria
 
-A `fcs-identity` publica eventos explicitos de auditoria no topico Kafka `audit-log-requested`. Ela nao mantem tabela `AuditLogs` no `IdentityDb`.
+A `fcs-identity` publica eventos explícitos de auditoria no tópico Kafka `audit-log-requested`. Ela não mantém tabela `AuditLogs` no `IdentityDb`.
 
 Eventos iniciais:
 
@@ -60,11 +60,11 @@ LoginFailed
 TokenRefreshed
 ```
 
-O envio do evento e responsabilidade do caso de uso que conhece o significado da acao. O `fcs-audit-logs` consome o topico e persiste os registros em MongoDB.
+O envio do evento é responsabilidade do caso de uso que conhece o significado da ação. O `fcs-audit-logs` consome o tópico e persiste os registros em MongoDB.
 
 ## Endpoints principais
 
-Publicos:
+Públicos:
 
 ```text
 POST /auth/register/donor
@@ -80,9 +80,9 @@ GET /me
 
 ## Regras confirmadas
 
-- O cadastro publico e apenas para `Doador`.
-- O **GestorONG** e provisionado administrativamente no Keycloak e tambem registrado no `IdentityDb` como `ManagerProfile`.
+- O cadastro público é apenas para `Doador`.
+- O **GestorONG** é provisionado administrativamente no Keycloak e também registrado no `IdentityDb` como `ManagerProfile`.
 - A `fcs-identity` executa seed para criar ou encontrar o **GestorONG** no Keycloak, garantir a role `GestorONG` e criar ou atualizar o `ManagerProfile`.
-- A aplicacao nao armazena senha nem hash de senha.
-- Roles canonicas do MVP: `Doador` e `GestorONG`.
-- Eventos de auditoria de identidade sao publicados no Kafka pela propria `fcs-identity`, sem outbox.
+- A aplicação não armazena senha nem hash de senha.
+- Roles canônicas do MVP: `Doador` e `GestorONG`.
+- Eventos de auditoria de identidade são publicados no Kafka pela própria `fcs-identity`, sem outbox.

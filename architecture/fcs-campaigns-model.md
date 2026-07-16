@@ -1,12 +1,12 @@
 # Modelo da fcs-campaigns
 
-A `fcs-campaigns` e dona das **Campanhas**, do **Painel de Transparencia** e da atualizacao idempotente do valor arrecadado quando uma doacao e processada.
+A `fcs-campaigns` é dona das **Campanhas**, do **Painel de Transparência** e da atualização idempotente do valor arrecadado quando uma doação é processada.
 
 ## Entidades
 
 ### Campaign
 
-Representa uma campanha de arrecadacao administrada por um **GestorONG**.
+Representa uma campanha de arrecadação administrada por um **GestorONG**.
 
 - `Id`
 - `Title`
@@ -22,7 +22,7 @@ Representa uma campanha de arrecadacao administrada por um **GestorONG**.
 
 ### CampaignDonationEntry
 
-Representa uma doacao ja refletida no valor arrecadado de uma campanha.
+Representa uma doação já refletida no valor arrecadado de uma campanha.
 
 - `Id`
 - `CampaignId`
@@ -30,7 +30,7 @@ Representa uma doacao ja refletida no valor arrecadado de uma campanha.
 - `Amount`
 - `ProcessedAt`
 
-Restricao de unicidade:
+Restrição de unicidade:
 
 ```text
 CampaignId + DonationId
@@ -48,7 +48,7 @@ GET    /campaigns
 GET    /campaigns/{id}
 ```
 
-Publicos:
+Públicos:
 
 ```text
 GET /transparency/campaigns
@@ -77,13 +77,13 @@ Payload de `POST /internal/campaigns/{id}/donation-processed`:
 - `CreatedByManagerId` referencia o gestor criador sem foreign key para o `IdentityDb`.
 - Toda campanha nova nasce com status `Active`.
 - Apenas campanhas com status `Active` podem ser editadas.
-- Transicoes de status permitidas: `Active -> Completed` e `Active -> Canceled`.
-- Campanhas `Completed` ou `Canceled` nao podem voltar para `Active` nem trocar entre si.
-- O painel publico lista apenas campanhas com status `Active` e usa paginacao.
+- Transições de status permitidas: `Active -> Completed` e `Active -> Canceled`.
+- Campanhas `Completed` ou `Canceled` não podem voltar para `Active` nem trocar entre si.
+- O painel público lista apenas campanhas com status `Active` e usa paginação.
 - As listagens retornam `items`, `page`, `pageSize` e `totalCount`.
 - A listagem administrativa aceita filtros de status repetidos e ignora valores duplicados.
-- `page` menor que 1 e normalizado para 1; `pageSize` fora de 1 a 100 e normalizado para 10.
-- `EndDate` nao pode estar no passado.
+- `page` menor que 1 é normalizado para 1; `pageSize` fora de 1 a 100 é normalizado para 10.
+- `EndDate` não pode estar no passado.
 - `FinancialGoal` deve ser maior que zero.
-- Uma campanha com status `Completed` ou `Canceled` nao pode receber doacao.
-- O endpoint interno de doacao processada e idempotente por `DonationId`.
+- Uma campanha com status `Completed` ou `Canceled` não pode receber doação.
+- O endpoint interno de doação processada é idempotente por `DonationId`.
