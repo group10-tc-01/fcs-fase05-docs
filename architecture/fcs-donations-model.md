@@ -1,12 +1,12 @@
 # Fluxo da fcs-donations
 
-A `fcs-donations` recebe intencoes de doacao de um **Doador** autenticado, valida a elegibilidade da campanha na `fcs-campaigns`, persiste a doacao como pendente e usa outbox para publicar o evento `DonationReceivedEvent` no Kafka.
+A `fcs-donations` recebe intenções de doação de um **Doador** autenticado, valida a elegibilidade da campanha na `fcs-campaigns`, persiste a doação como pendente e usa outbox para publicar o evento `DonationReceivedEvent` no Kafka.
 
 ## Entidades
 
 ### Donation
 
-Representa a intencao de doacao aceita pela API.
+Representa a intenção de doação aceita pela API.
 
 - `Id`
 - `CampaignId`
@@ -19,7 +19,7 @@ Representa a intencao de doacao aceita pela API.
 
 ### OutboxMessage
 
-Representa uma mensagem pendente de publicacao no Kafka.
+Representa uma mensagem pendente de publicação no Kafka.
 
 - `Id`
 - `AggregateId`
@@ -33,7 +33,7 @@ Representa uma mensagem pendente de publicacao no Kafka.
 
 ### ProcessedMessage
 
-Representa uma mensagem ja tratada por um consumidor para apoiar idempotencia.
+Representa uma mensagem já tratada por um consumidor para apoiar idempotência.
 
 - `Id`
 - `MessageId`
@@ -85,7 +85,7 @@ Event:
 DonationReceivedEvent
 ```
 
-Payload minimo:
+Payload mínimo:
 
 ```json
 {
@@ -100,11 +100,11 @@ Payload minimo:
 
 ## Regras confirmadas
 
-- Apenas `Doador` autenticado pode criar uma intencao de doacao.
+- Apenas `Doador` autenticado pode criar uma intenção de doação.
 - `Amount` deve ser maior que zero.
-- A campanha precisa estar apta a receber doacao, validada pela `fcs-campaigns` via HTTP com Refit e Polly.
-- A `fcs-donations` nao atualiza `ValorTotalArrecadado`.
-- A publicacao no Kafka usa outbox para evitar perda de evento apos persistir a doacao.
-- A `fcs-donation-worker` atualiza o status da `Donation` para `Processed` ou `Failed` apos consumir o evento.
-- A `fcs-donation-worker` nao escreve diretamente no banco da `fcs-campaigns`; ela chama uma API interna da `fcs-campaigns` para refletir o valor arrecadado.
+- A campanha precisa estar apta a receber doação, validada pela `fcs-campaigns` via HTTP com Refit e Polly.
+- A `fcs-donations` não atualiza `ValorTotalArrecadado`.
+- A publicação no Kafka usa outbox para evitar perda de evento após persistir a doação.
+- A `fcs-donation-worker` atualiza o status da `Donation` para `Processed` ou `Failed` após consumir o evento.
+- A `fcs-donation-worker` não escreve diretamente no banco da `fcs-campaigns`; ela chama uma API interna da `fcs-campaigns` para refletir o valor arrecadado.
 - `DonorId` referencia o `DonorProfile` da `fcs-identity` sem foreign key para o `IdentityDb`.

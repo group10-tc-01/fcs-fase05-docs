@@ -1,16 +1,9 @@
-# Usar repositorios separados por aplicacao
+# Usar repositórios separados por aplicação
 
-Cada aplicacao da fase 5 tera seu proprio repositorio: `fcs-identity`, `fcs-campaigns`, `fcs-donations`, `fcs-donation-worker`, `fcs-audit-logs`, `fcs-bff` e `fcs-web`. Alem deles, havera o repositorio `fcs-infra` para infraestrutura compartilhada, ambiente integrado e provisionamento em Azure.
+Cada aplicação da fase 5 possui seu próprio repositório, Dockerfile, execução local, manifests Kubernetes e wrappers de CI/CD. O `fcs-infra` administra a plataforma compartilhada da VPS/K3s; `fcs-pipelines` centraliza automações reutilizáveis.
 
-**Opcoes consideradas**
+## Consequências
 
-- Manter todas as aplicacoes em um monorepo.
-- Criar um repositorio por aplicacao.
-
-**Consequencias**
-
-- Cada repositorio tera seu proprio pipeline de CI/CD.
-- A documentacao de entrega deve listar todos os repositorios.
-- Cada aplicacao mantem seu proprio `Dockerfile`, `docker-compose` local e manifests Kubernetes especificos do servico.
-- O `fcs-infra` concentra os manifests Kubernetes integrados, docker compose do ambiente completo, dashboards/configuracoes de observabilidade, configuracoes de Keycloak/Kafka e Terraform para provisionar recursos na Azure.
-- Segredos e credenciais da Azure nao devem ser hardcoded; devem ser parametrizados e, quando aplicavel, armazenados em Key Vault.
+- Cada serviço evolui e testa de forma independente.
+- Secrets não são versionados: Infisical os sincroniza para o cluster.
+- Imagens são publicadas no GHCR e os deployments são feitos no namespace correspondente.

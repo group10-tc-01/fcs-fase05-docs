@@ -1,16 +1,16 @@
-# Manter o Keycloak atras da API de Identidade
+# Manter o Keycloak atrás da API de Identidade
 
-A plataforma usara o Keycloak como provedor de identidade para credenciais, hash de senha, emissao de JWT e roles de RBAC, mas os clientes nao chamarao o Keycloak diretamente. A API `fcs-identity` atuara como fachada de identidade da aplicacao, expondo endpoints de cadastro e login enquanto delega operacoes de credencial ao Keycloak e armazena apenas dados de perfil da aplicacao, como CPF e `keycloakUserId`.
+A plataforma usará o Keycloak como provedor de identidade para credenciais, hash de senha, emissão de JWT e roles de RBAC, mas os clientes não chamarão o Keycloak diretamente. A API `fcs-identity` atuará como fachada de identidade da aplicação, expondo endpoints de cadastro e login enquanto delega operações de credencial ao Keycloak e armazena apenas dados de perfil da aplicação, como CPF e `keycloakUserId`.
 
-**Opcoes consideradas**
+**Opções consideradas**
 
 - Permitir que o cliente chame o Keycloak diretamente via OpenID Connect.
-- Encapsular o Keycloak atras da `fcs-identity` e mante-lo como infraestrutura interna.
+- Encapsular o Keycloak atrás da `fcs-identity` e mantê-lo como infraestrutura interna.
 
-**Consequencias**
+**Consequências**
 
-- O frontend, o Swagger e as demonstracoes no Postman usam endpoints da aplicacao em vez de endpoints do Keycloak.
+- O frontend, o Swagger e as demonstrações no Postman usam endpoints da aplicação em vez de endpoints do Keycloak.
 - A `fcs-identity` deve intermediar os fluxos de login e refresh e retornar tokens emitidos pelo Keycloak.
 - Os endpoints minimos da `fcs-identity` incluem `POST /auth/register/donor`, `POST /auth/login`, `POST /auth/refresh` e `GET /me`.
-- O RBAC do MVP usara apenas as roles `GestorONG` e `Doador`.
-- Os servicos da aplicacao validam JWTs emitidos pelo Keycloak, mas nao sao donos do armazenamento de senha nem da validacao de credenciais.
+- O RBAC do MVP usará apenas as roles `GestorONG` e `Doador`.
+- Os serviços da aplicação validam JWTs emitidos pelo Keycloak, mas não são donos do armazenamento de senha nem da validação de credenciais.
