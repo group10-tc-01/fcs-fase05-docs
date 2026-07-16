@@ -44,16 +44,10 @@ Exemplo para `fcs-donation-worker`:
 
 ```text
 src/
-  Fcs.DonationWorker.Domain/
   Fcs.DonationWorker.Application/
-  Fcs.DonationWorker.Infrastructure.SqlServer/
-  Fcs.DonationWorker.Infrastructure.Kafka/
-  Fcs.DonationWorker.Infrastructure.Campaigns/
   Fcs.DonationWorker.Worker/
 tests/
   Fcs.DonationWorker.UnitTests/
-  Fcs.DonationWorker.IntegratedTests/
-  Fcs.DonationWorker.CommonTestsUtilities/
 ```
 
 ## Worker com MongoDB
@@ -62,15 +56,10 @@ Exemplo para `fcs-audit-logs`:
 
 ```text
 src/
-  Fcs.AuditLogs.Domain/
   Fcs.AuditLogs.Application/
-  Fcs.AuditLogs.Infrastructure.Kafka/
-  Fcs.AuditLogs.Infrastructure.MongoDB/
   Fcs.AuditLogs.Worker/
 tests/
   Fcs.AuditLogs.UnitTests/
-  Fcs.AuditLogs.IntegratedTests/
-  Fcs.AuditLogs.CommonTestsUtilities/
 ```
 
 ## Convenções

@@ -1,6 +1,6 @@
 # Reutilizar estrutura interna .NET da fase 4
 
-Os servicos .NET da fase 5 seguirao a estrutura interna usada na fase 4, tomando `fcs-users` como referencia. Cada servico sera organizado em projetos de Domain, Application, Infrastructure, WebApi ou Worker, alem de projetos de testes unitarios, integrados, funcionais e utilitarios quando aplicavel.
+Os servicos .NET da fase 5 seguirao a estrutura interna usada na fase 4, tomando `fcg-users` como referencia. Cada servico sera organizado em projetos de Domain, Application, Infrastructure, WebApi ou Worker, alem de projetos de testes unitarios, integrados, funcionais e utilitarios quando aplicavel.
 
 **Consequencias**
 
