@@ -4,7 +4,6 @@ Este repositório é a fonte de verdade arquitetural da Fase 05. Os READMEs dos 
 
 ## Navegação
 
-- [Requisitos do hackathon](hackaton.md)
 - [Visão geral da arquitetura](architecture/overview.md)
 - [Repositórios e infraestrutura](architecture/repositories-and-infra.md)
 - [Fluxos de endpoints e workers](architecture/endpoint-flows.md)
