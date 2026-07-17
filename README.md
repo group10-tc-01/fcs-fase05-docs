@@ -6,6 +6,7 @@ Este repositório é a fonte de verdade arquitetural da Fase 05. Os READMEs dos 
 
 - [Visão geral da arquitetura](architecture/overview.md)
 - [Repositórios e infraestrutura](architecture/repositories-and-infra.md)
+- [Modelo de notificações](architecture/fcs-notifications-model.md)
 - [Fluxos de endpoints e workers](architecture/endpoint-flows.md)
 - [Modelos de identidade, campanhas, doações e banco](architecture/)
 - [ADRs](adr/)
