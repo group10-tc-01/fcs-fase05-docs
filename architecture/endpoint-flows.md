@@ -1,6 +1,6 @@
 # Fluxos dos Endpoints
 
-Este documento descreve os fluxos Mermaid dos endpoints confirmados. Os fluxos seguem os contratos definidos em [endpoints.md](./endpoints.md).
+Este documento descreve os fluxos Mermaid dos endpoints confirmados.
 
 ## fcs-identity
 
@@ -589,7 +589,7 @@ sequenceDiagram
     Worker->>AuditKafka: Publish AuditLogRequested DonationProcessed
 ```
 
-Falhas e idempotencia:
+Falhas e idempotência:
 
 ```mermaid
 sequenceDiagram

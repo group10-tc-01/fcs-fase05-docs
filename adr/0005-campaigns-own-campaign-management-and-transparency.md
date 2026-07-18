@@ -1,14 +1,14 @@
-# Concentrar campanhas e transparencia na fcs-campaigns
+# Concentrar campanhas e transparência na fcs-campaigns
 
-A `fcs-campaigns` sera responsavel pela administracao das **Campanhas** pelo **GestorONG** e pelo **Painel de Transparencia** publico. Essa fronteira mantem em um unico servico as regras sobre status, periodo, meta financeira e exposicao publica de campanhas ativas.
+A `fcs-campaigns` será responsável pela administração das **Campanhas** pelo **GestorONG** e pelo **Painel de Transparência** público. Essa fronteira mantém em um único serviço as regras sobre status, período, meta financeira e exposição pública de campanhas ativas.
 
-**Consequencias**
+**Consequências**
 
 - Endpoints administrativos de campanha exigem role `GestorONG`.
 - Toda campanha nova nasce com status `Active`.
 - Apenas campanhas com status `Active` podem ser editadas.
-- Transicoes de status permitidas: `Active -> Completed` e `Active -> Canceled`.
-- O **Painel de Transparencia** e publico e lista apenas **Campanhas Ativas**.
-- A entidade de campanha inclui titulo, descricao, datas, meta financeira, status, valor total arrecadado e `CreatedByManagerId`.
-- A `fcs-campaigns` mantem registros de doacoes processadas por campanha para idempotencia da atualizacao de valor arrecadado.
-- `CreatedByManagerId` e uma referencia externa ao perfil do gestor, sem foreign key entre databases.
+- Transições de status permitidas: `Active -> Completed` e `Active -> Canceled`.
+- O **Painel de Transparência** é público e lista apenas **Campanhas Ativas**.
+- A entidade de campanha inclui título, descrição, datas, meta financeira, status, valor total arrecadado e `CreatedByManagerId`.
+- A `fcs-campaigns` mantém registros de doações processadas por campanha para idempotência da atualização de valor arrecadado.
+- `CreatedByManagerId` é uma referência externa ao perfil do gestor, sem foreign key entre databases.
