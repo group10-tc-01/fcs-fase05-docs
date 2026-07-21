@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fcs-fase05-docs
+  title: FCS Fase 05 Docs
+  description: Documentação arquitetural e de rastreabilidade do hackathon Conexão Solidária.
+  annotations:
+    github.com/project-slug: group10-tc-01/fcs-fase05-docs
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: Repositório
+      url: https://github.com/group10-tc-01/fcs-fase05-docs
+spec:
+  type: documentation
+  lifecycle: production
+  owner: group:default/fcs-team
+  system: conexao-solidaria

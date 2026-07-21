@@ -1,0 +1,6 @@
+site_name: FCS Fase 05 Docs
+site_description: Documentação arquitetural da Conexão Solidária.
+nav:
+  - Início: index.md
+plugins:
+  - techdocs-core
